@@ -17,8 +17,8 @@
   {
     "key": "randplay",
     "title": "랜플댄 단골",
-    "desc": "랜덤플레이댄스 3곳 이상",
-    "where": { "stats.byKind.랜플댄": ">=3" },
+    "desc": "랜덤플레이댄스 5곳 이상",
+    "where": { "stats.byKind.랜플댄": ">=5" },
     "sort": "-stats.byKind.랜플댄"
   },
   {
@@ -31,8 +31,8 @@
   {
     "key": "club",
     "title": "클럽 DJ 단골",
-    "desc": "DJ 셋 3곳 이상",
-    "where": { "stats.byKind.DJ": ">=3" },
+    "desc": "DJ 셋 5곳 이상",
+    "where": { "stats.byKind.DJ": ">=5" },
     "sort": "-stats.byKind.DJ"
   },
   {
