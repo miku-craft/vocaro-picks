@@ -11,11 +11,13 @@ import {
   badgeText,
   fmt,
   eventDate,
-} from "./format.js";
+} from "./format.ts";
+import type { EventInfo, Section, Song, Use } from "./types.ts";
 
-const extLink = (href, text) => html`<a href=${href} target="_blank" rel="noopener">${text} ↗</a>`;
+const extLink = (href: string, text: string) =>
+  html`<a href=${href} target="_blank" rel="noopener">${text} ↗</a>`;
 
-export const card = (s, onOpen) => html`
+export const card = (s: Song, onOpen: (s: Song) => void) => html`
   <article class="card">
     <button class="open" type="button" @click=${() => onOpen(s)}>
       ${
@@ -32,7 +34,11 @@ export const card = (s, onOpen) => html`
   </article>
 `;
 
-export const sectionTabs = (sections, active, onSelect) =>
+export const sectionTabs = (
+  sections: Section[],
+  active: string | null,
+  onSelect: (key: string | null) => void,
+) =>
   [{ key: null, title: "전체" }, ...sections].map(
     (sec) => html`
       <button
@@ -46,9 +52,9 @@ export const sectionTabs = (sections, active, onSelect) =>
   );
 
 // 행사 하나: 제목 줄 + 그 행사에서 쓰인 세션 목록
-const useItem = (e, id, list) => html`
+const useItem = (e: EventInfo | undefined, id: string, list: Use[]) => html`
   <li>
-    <div class="use-head">${FLAG[e?.country] ?? ""} ${eventDate(e)} ${e?.name ?? id}</div>
+    <div class="use-head">${e ? FLAG[e.country] : ""} ${eventDate(e)} ${e?.name ?? id}</div>
     <ul>
       ${list.map(
         (u) =>
@@ -61,14 +67,14 @@ const useItem = (e, id, list) => html`
   </li>
 `;
 
-export function detail(s, events) {
+export function detail(s: Song, events: Map<string, EventInfo>) {
   const src = embedUrl(s);
   const kinds = Object.entries(s.stats.byKind)
     .map(([k, n]) => `${KIND[k] ?? k} ${n}`)
     .join(" · ");
   const tags = s.tags.filter((t) => t !== "pick");
   // 행사별로 묶어서 최근 행사부터
-  const byEvent = Object.entries(Object.groupBy(s.uses, (u) => u.ev)).sort(([a], [b]) =>
+  const byEvent = [...Map.groupBy(s.uses, (u) => u.ev)].sort(([a], [b]) =>
     (events.get(b)?.from ?? "").localeCompare(events.get(a)?.from ?? ""),
   );
   const links = [

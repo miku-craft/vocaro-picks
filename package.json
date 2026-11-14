@@ -4,17 +4,20 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
-    "data": "node scripts/build-data.mjs",
+    "data": "node scripts/build-data.ts",
     "format": "oxfmt",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "lit-html": "^3.3.3"
   },
   "devDependencies": {
+    "@types/node": "^26.6.6",
     "oxfmt": "^0.78.0",
+    "typescript": "^7.0.2",
     "vite": "^8.3.8",
     "wrangler": "^4.162.0"
   },

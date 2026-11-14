@@ -1,20 +1,28 @@
 import { render, nothing } from "lit-html";
-import { matches, byKey } from "./rules.js";
-import { card, sectionTabs, detail } from "./views.js";
+import { matches, byKey } from "./rules.ts";
+import { card, sectionTabs, detail } from "./views.ts";
+import type { EventInfo, Section, Song } from "./types.ts";
 
-const $ = (s) => document.querySelector(s);
-const dlg = $("#detail");
-const state = { songs: [], sections: [], events: new Map(), active: null }; // active: 섹션 key (null = 전체)
+const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector<T>(s)!;
+const dlg = $<HTMLDialogElement>("#detail");
+const q = $<HTMLInputElement>("#q");
+const sort = $<HTMLSelectElement>("#sort");
+const state = {
+  songs: [] as Song[],
+  sections: [] as Section[],
+  events: new Map<string, EventInfo>(),
+  active: null as string | null, // 섹션 key (null = 전체)
+};
 
-const searchText = (s) =>
+const searchText = (s: Song) =>
   [s.title, s.titleKo, ...s.producer, ...s.vocal, ...s.tags].join(" ").toLowerCase();
 
 function update() {
-  const q = $("#q").value.trim().toLowerCase();
+  const query = q.value.trim().toLowerCase();
   const section = state.sections.find((s) => s.key === state.active);
   const shown = state.songs
-    .filter((s) => (!section || matches(s, section.where)) && searchText(s).includes(q))
-    .sort(byKey($("#sort").value || section?.sort || "-stats.events"));
+    .filter((s) => (!section || matches(s, section.where)) && searchText(s).includes(query))
+    .sort(byKey(sort.value || section?.sort || "-stats.events"));
 
   render(sectionTabs(state.sections, state.active, selectSection), $("#sections"));
   $("#section-desc").textContent = `${section ? `${section.desc} ·` : "전체"} ${shown.length}곡`;
@@ -24,12 +32,12 @@ function update() {
   );
 }
 
-function selectSection(key) {
+function selectSection(key: string | null) {
   state.active = key;
   update();
 }
 
-function openDetail(s) {
+function openDetail(s: Song) {
   render(detail(s, state.events), $("#detail-content"));
   history.replaceState(null, "", `#song-${s.id}`);
   if (!dlg.open) dlg.showModal();
@@ -52,16 +60,16 @@ dlg.addEventListener("close", () => {
 dlg.addEventListener("click", (e) => {
   if (e.target === dlg) dlg.close();
 });
-$("#q").addEventListener("input", update);
-$("#sort").addEventListener("change", update);
+q.addEventListener("input", update);
+sort.addEventListener("change", update);
 
-const load = (name) =>
+const load = <T>(name: string): Promise<T> =>
   fetch(`${import.meta.env.BASE_URL}${name}.json`).then((r) => {
     if (!r.ok) throw new Error(name);
     return r.json();
   });
 
-Promise.all(["songs", "sections", "events"].map(load))
+Promise.all([load<Song[]>("songs"), load<Section[]>("sections"), load<EventInfo[]>("events")])
   .then(([songs, sections, events]) => {
     Object.assign(state, {
       songs,

@@ -13,31 +13,33 @@ vocaro-picks/
 ├── index.html              페이지 뼈대 (헤더, 목록 자리, 상세 창)
 ├── style.css               스타일 (라이트/다크 모드 자동 전환)
 ├── src/
-│   ├── main.js             데이터 불러오기, 검색·섹션·정렬, 상세 창 열고 닫기
-│   ├── views.js            lit-html 템플릿 (카드, 섹션 버튼, 상세 창)
-│   ├── format.js           화면에 보일 문자열·URL 만들기
-│   └── rules.js            sections.json 규칙 해석
+│   ├── main.ts             데이터 불러오기, 검색·섹션·정렬, 상세 창 열고 닫기
+│   ├── views.ts            lit-html 템플릿 (카드, 섹션 버튼, 상세 창)
+│   ├── format.ts           화면에 보일 문자열·URL 만들기
+│   ├── rules.ts            sections.json 규칙 해석
+│   └── types.ts            JSON 데이터 타입 (Song, EventInfo, Section)
 ├── public/
 │   ├── songs.json          곡 데이터
 │   ├── events.json         행사 데이터 (곡 상세의 "쓰인 행사"에 사용)
 │   └── sections.json       섹션 정의 (요즘 신곡, 한일 양쪽, 랜플댄 단골 등)
 ├── scripts/
-│   └── build-data.mjs      research/ 조사 결과로 public/songs.json, events.json 생성
+│   └── build-data.ts       research/ 조사 결과로 public/songs.json, events.json 생성
 ├── wrangler.jsonc          Cloudflare Workers 배포 설정
 └── research/               행사 셋리 조사 자료 (커밋하지 않음)
 ```
 
-화면은 [lit-html](https://lit.dev/docs/libraries/standalone-templates/)로 그리고, [Vite](https://vite.dev/)로 빌드합니다.
+TypeScript로 작성했고, 화면은 [lit-html](https://lit.dev/docs/libraries/standalone-templates/)로 그리고, [Vite](https://vite.dev/)로 빌드합니다.
 
 ## 로컬에서 보기
 
-Node.js 20.19 이상이 필요합니다.
+Node.js 22.18 이상이 필요합니다. (`scripts/build-data.ts`를 Node가 바로 실행합니다.)
 
 ```bash
 npm install
 npm run dev       # 개발 서버 (저장하면 바로 반영)
 npm run build     # dist/ 에 배포용 파일 생성
 npm run preview   # dist/ 를 배포와 같은 형태로 확인
+npm run typecheck # TypeScript 타입 검사 (build 때도 실행)
 npm run format    # oxfmt로 코드 정리
 ```
 
