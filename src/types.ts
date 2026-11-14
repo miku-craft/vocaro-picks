@@ -12,7 +12,8 @@ export interface Use {
   self?: true; // DJ 본인 곡
 }
 
-export interface Song {
+// public/songs.json 의 곡 하나
+export interface SongData {
   id: number; // VocaDB id
   title: string;
   titleKo: string | null;
@@ -24,8 +25,26 @@ export interface Song {
   nico: string | null;
   stats: { events: number; kr: number; jp: number; byKind: Partial<Record<Kind, number>> };
   uses: Use[];
-  tags: string[];
+}
+
+// 화면에서 쓰는 곡: songs.json 에 picks.json 을 합친 것 (src/picks.ts)
+export interface Song extends SongData {
+  tags: string[]; // 노점상이면 ["pick"]
   why: string;
+}
+
+// picks.json 의 항목. 노점상 추천 PR 은 이것만 적으면 된다
+export interface PickEntry {
+  id: number; // VocaDB id
+  title: string;
+  titleKo?: string;
+  titleKoUnverified?: boolean; // 한국어 제목이 임시 번역이면 true
+  producer: string[];
+  vocal?: string[];
+  pub?: string; // YYYY-MM-DD
+  yt?: string; // YouTube 영상 ID
+  nico?: string; // 니코동 영상 ID (sm...)
+  why?: string; // 추천 이유 한 줄
 }
 
 export interface EventInfo {

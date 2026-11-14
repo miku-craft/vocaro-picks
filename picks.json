@@ -1,0 +1,41 @@
+[
+  {
+    "id": 951279,
+    "title": "HIGHER",
+    "producer": ["あたたかい水族館"],
+    "vocal": ["初音ミク"],
+    "pub": "2026-10-23",
+    "yt": "-VvFurpY4KU",
+    "nico": "sm46956167"
+  },
+  {
+    "id": 1021673,
+    "title": "最高のMVの作りかた",
+    "titleKo": "최고의 MV 만드는 법",
+    "producer": ["阿修"],
+    "vocal": ["初音ミク"],
+    "pub": "2026-08-22",
+    "yt": "fcVC8FN_Qx8",
+    "nico": "sm46702609"
+  },
+  {
+    "id": 78616,
+    "title": "このふざけた素晴らしき世界は、僕の為にある",
+    "titleKo": "이 실없이 멋진 세계는, 나를 위해 있어",
+    "producer": ["n.k"],
+    "vocal": ["初音ミク"],
+    "pub": "2015-01-19",
+    "yt": "ziGLZkisja4",
+    "nico": "sm25379507"
+  },
+  {
+    "id": 795306,
+    "title": "気になるあの娘",
+    "titleKo": "신경 쓰이는 그 애",
+    "titleKoUnverified": true,
+    "producer": ["相対性理論 (원곡)", "Megu (커버)"],
+    "vocal": ["初音ミク"],
+    "pub": "2024-10-08",
+    "yt": "Y1mYYShiLhg"
+  }
+]

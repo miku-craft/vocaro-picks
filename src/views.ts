@@ -73,7 +73,6 @@ export function detail(s: Song, events: Map<string, EventInfo>, autoplay: boolea
     .filter((k) => s.stats.byKind[k])
     .map((k) => `${KIND[k]} ${s.stats.byKind[k]}`)
     .join(", ");
-  const tags = s.tags.filter((t) => t !== "pick");
   // 행사별로 묶어서 최근 행사부터
   const byEvent = [...Map.groupBy(s.uses, (u) => u.ev)].sort(([a], [b]) =>
     (events.get(b)?.from ?? "").localeCompare(events.get(a)?.from ?? ""),
@@ -113,13 +112,6 @@ export function detail(s: Song, events: Map<string, EventInfo>, autoplay: boolea
       </p>
       <p class="badges">${badgeText(s)}${kinds ? ` (${kinds})` : ""}</p>
       ${s.why ? html`<p class="why">${s.why}</p>` : nothing}
-      ${
-        tags.length
-          ? html`<ul class="tags">
-              ${tags.map((t) => html`<li>${t}</li>`)}
-            </ul>`
-          : nothing
-      }
       <h3>쓰인 행사</h3>
       <ol class="uses">
         ${
@@ -129,6 +121,39 @@ export function detail(s: Song, events: Map<string, EventInfo>, autoplay: boolea
         }
       </ol>
       <p class="links">${links.map((a, i) => html`${i ? ", " : ""}${a}`)}</p>
+    </div>
+  `;
+}
+
+// 지금 목록을 YouTube 임베드의 playlist 파라미터로 이어서 재생한다. 순서와 다음 곡 넘기기는 플레이어가 맡는다.
+// 첫 곡도 playlist 에 넣어야 첫 곡부터 재생된다 (안 넣으면 둘째 곡부터 시작함)
+// ponytail: YouTube 영상이 있는 앞 199곡까지만. 200곡부터는 플레이어가 아예 뜨지 않는다 (직접 확인).
+// 니코동만 있는 곡은 빠진다. 전부 넣으려면 IFrame Player API 로 한 곡씩 넘겨야 한다
+export function playlist(songs: Song[]) {
+  const list = songs.filter((s) => s.yt).slice(0, 199);
+  const ids = list.map((s) => s.yt).join(",");
+  const skipped = songs.length - list.length;
+  return html`
+    <div class="player">
+      ${
+        list.length
+          ? html`<iframe
+              src=${`https://www.youtube-nocookie.com/embed/${list[0]?.yt}?autoplay=1&playlist=${ids}`}
+              title="목록 연속 재생"
+              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+              allowfullscreen
+            ></iframe>`
+          : html`<p class="no-video">재생할 YouTube 영상이 없어요.</p>`
+      }
+    </div>
+    <div class="detail-body">
+      <h2 id="detail-title">목록 연속 재생</h2>
+      <p class="meta">
+        ${list.length}곡${skipped ? ` (YouTube 영상이 없거나 199곡을 넘어 ${skipped}곡 제외)` : ""}
+      </p>
+      <ol class="queue">
+        ${list.map((s) => html`<li>${koTitle(s)} - ${s.producer.join(", ")}</li>`)}
+      </ol>
     </div>
   `;
 }

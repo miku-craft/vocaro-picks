@@ -52,11 +52,16 @@ h1 {
 
 .controls {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 .controls input[type="search"] {
-  flex: 1;
+  flex: 1 1 160px;
   min-width: 0;
+}
+.controls button {
+  white-space: nowrap;
+  cursor: pointer;
 }
 .toggle {
   display: flex;
@@ -73,6 +78,7 @@ h1 {
 }
 input,
 select,
+.controls button,
 .tags button {
   font: inherit;
   color: inherit;
@@ -280,6 +286,12 @@ select,
 }
 .detail-body a {
   color: var(--accent);
+}
+.queue {
+  margin: 12px 0 0;
+  padding-left: 22px;
+  font-size: 13px;
+  color: var(--muted);
 }
 .links {
   margin: 16px 0 0;

@@ -14,16 +14,18 @@ vocaro-picks/
 ├── style.css               스타일 (라이트/다크 모드 자동 전환)
 ├── src/
 │   ├── main.ts             데이터 불러오기, 검색, 섹션, 정렬, 상세 창 열고 닫기
-│   ├── views.ts            lit-html 템플릿 (카드, 섹션 버튼, 상세 창)
+│   ├── views.ts            lit-html 템플릿 (카드, 섹션 버튼, 상세 창, 연속 재생)
 │   ├── format.ts           화면에 보일 문자열과 URL 만들기
 │   ├── rules.ts            섹션 where / sort 규칙 해석
 │   ├── sections.ts         섹션 정의 (요즘 신곡, 한일 양쪽, 랜플댄 단골 등)
+│   ├── picks.ts            picks.json 을 곡 목록에 합치기
 │   └── types.ts            데이터 타입 (Song, EventInfo, Section)
 ├── public/
 │   ├── songs.json          곡 데이터
 │   └── events.json         행사 데이터 (곡 상세의 "쓰인 행사"에 사용)
 ├── scripts/
 │   └── build-data.ts       research/ 조사 결과로 public/songs.json, events.json 생성
+├── picks.json              노점상 추천 곡 (PR은 여기에)
 ├── wrangler.jsonc          Cloudflare Workers 배포 설정
 └── research/               행사 셋리 조사 자료 (커밋하지 않음)
 ```
@@ -55,7 +57,7 @@ npm run data
 ```
 
 - 서로 다른 행사 3곳 이상에서 쓰인 곡과, 2곳에서 쓰인 최근 1년 신곡을 올립니다.
-- 다시 빌드해도 `songs.json`에 직접 적은 `tags`, `why`는 `id` 기준으로 그대로 남습니다.
+- `picks.json`에 있는 곡은 행사 수가 기준에 못 미쳐도 집계에 있으면 행사 기록과 함께 올립니다.
 - 조사 방법과 기준은 `research/method.md`, `research/tally.md`에 있습니다.
 
 ```json
@@ -82,9 +84,7 @@ npm run data
       "kind": "랜플댄",
       "src": "https://..."
     }
-  ],
-  "tags": [],
-  "why": "추천 근거 한 줄"
+  ]
 }
 ```
 
@@ -97,16 +97,39 @@ npm run data
 | `yt`, `nico`        | YouTube, 니코동 영상 ID. 썸네일과 상세 창 임베드에 사용 (YouTube 우선) |
 | `stats`             | 쓰인 행사 수 (`events` 전체, `kr` 한국, `jp` 일본, `byKind` 종류별)    |
 | `uses`              | 쓰인 기록. `ev`는 `events.json`의 행사 ID                              |
-| `tags`              | 직접 붙이는 분류 key (예: `pick`). 빌드해도 유지                       |
-| `why`               | 추천 근거. 빌드해도 유지                                               |
 
 ## 노점상 넣기
 
-`public/songs.json`에 곡을 하나 추가하고 `tags`에 `"pick"`을 넣으면 "노점상" 섹션에 나옵니다. 추천 이유(`why`)는 비워 둬도 됩니다. 행사 기록이 없는 곡도 됩니다.
+노점상은 행사 기록과 상관없이 직접 추천하는 곡입니다. 루트의 `picks.json` 배열에 항목 하나를 추가하면 "노점상" 섹션에 나옵니다. 다른 파일은 건드리지 않아도 됩니다.
 
-- `id`는 VocaDB 곡 ID입니다. YouTube 영상 ID로 `https://vocadb.net/api/songs/byPv?pvService=Youtube&pvId=영상ID`를 열면 찾을 수 있습니다.
-- 행사 기록이 없으면 `stats`는 `{ "events": 0, "kr": 0, "jp": 0, "byKind": {} }`, `uses`는 `[]`로 둡니다.
-- `npm run data`를 다시 돌려도 `tags`가 있는 곡은 지워지지 않습니다. 이미 집계에 있는 곡이면 `tags`에 `"pick"`만 추가해도 됩니다.
+```json
+{
+  "id": 1021673,
+  "title": "最高のMVの作りかた",
+  "titleKo": "최고의 MV 만드는 법",
+  "producer": ["阿修"],
+  "vocal": ["初音ミク"],
+  "pub": "2026-08-22",
+  "yt": "fcVC8FN_Qx8",
+  "why": "추천 이유 한 줄"
+}
+```
+
+| 필드                | 필수 | 설명                                                                                                                  |
+| ------------------- | ---- | --------------------------------------------------------------------------------------------------------------------- |
+| `id`                | ✓    | VocaDB 곡 ID. YouTube 영상 ID로 `https://vocadb.net/api/songs/byPv?pvService=Youtube&pvId=영상ID`를 열면 찾을 수 있음 |
+| `title`             | ✓    | 원제                                                                                                                  |
+| `producer`          | ✓    | 작곡가(P) 목록                                                                                                        |
+| `titleKo`           |      | 한국어 제목                                                                                                           |
+| `titleKoUnverified` |      | 한국어 제목이 임시 번역이면 `true`                                                                                    |
+| `vocal`             |      | 보컬 음원 목록                                                                                                        |
+| `pub`               |      | 발표일 `YYYY-MM-DD`                                                                                                   |
+| `yt`                |      | YouTube 영상 ID. 썸네일, 재생, 목록 연속 재생에 사용                                                                  |
+| `nico`              |      | 니코동 영상 ID (`sm...`). `yt`가 없을 때 재생에 사용                                                                  |
+| `why`               |      | 추천 이유 한 줄. 카드와 상세 창에 표시                                                                                |
+
+- 이미 집계에 있는 곡이면 행사 기록은 `songs.json` 것을 그대로 쓰고, 노점상 표시와 `why`만 붙습니다.
+- `npm run typecheck`로 필드 이름과 타입을 확인할 수 있습니다.
 
 ## 섹션 추가하기
 

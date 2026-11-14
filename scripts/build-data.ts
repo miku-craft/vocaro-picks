@@ -1,13 +1,13 @@
 // research/ 의 조사 결과로 public/songs.json, public/events.json 을 만든다.
 // 실행: npm run data  (node scripts/build-data.ts, Node 22.18+ 의 타입 제거 실행)
 // - 페이지에 올리는 곡: 서로 다른 행사 3곳 이상 + 2곳에서 쓰인 최근 1년 신곡
-// - songs.json 에 직접 적은 tags, why 는 id 기준으로 보존한다.
+// - 노점상(picks.json)에 있는 곡은 기준에 못 미쳐도 집계에 있으면 행사 기록과 함께 올린다.
 // - VocaDB 영상 정보(YouTube/니코동 ID)는 research/.pv-cache.json 에 캐시한다.
 
 import fs from "node:fs/promises";
 import path from "node:path";
 import { KIND } from "../src/format.ts";
-import type { EventInfo, Kind, Song } from "../src/types.ts";
+import type { EventInfo, Kind, PickEntry, SongData } from "../src/types.ts";
 
 // research/ 입력 파일 모양 (쓰는 필드만)
 interface RawEvent {
@@ -66,6 +66,14 @@ const EVENT_RANGE_FIX: Record<string, string[]> = {
   K26: ["2026-11-14", "2026-11-15"],
 };
 
+// VocaDB 에 YouTube PV 가 등록되지 않은 곡의 YouTube 영상 ID (VocaDB id → 영상 ID)
+const YT_FIX: Record<number, string> = {
+  4979: "EMGyiiTC7sg", // カゲロウデイズ
+  773190: "Ja9qmYjXk6U", // 太陽系デスコ
+  871013: "R401j1QAvEg", // ディスペアダンス (YouTube 제목은 다름)
+  389595: "lyMrKFS_qls", // ハジメテノオト(Shortバージョン) (YouTube 는 malo - Topic 음원)
+};
+
 const readJson = async <T>(p: string, fallback: T): Promise<T> => {
   try {
     return JSON.parse(await fs.readFile(p, "utf8"));
@@ -106,10 +114,12 @@ events.sort(
 
 // ---------- 곡 고르기 ----------
 const tally = await readJson<Tally[]>(R("research", "tally.json"), []);
+const pickIds = new Set((await readJson<PickEntry[]>(R("picks.json"), [])).map((p) => p.id));
 const picked = tally.filter(
   (t) =>
     t.eventsNonSelf >= MIN_EVENTS ||
-    (t.eventsNonSelf >= NEW_MIN_EVENTS && (t.pub || "") >= NEW_SINCE),
+    (t.eventsNonSelf >= NEW_MIN_EVENTS && (t.pub || "") >= NEW_SINCE) ||
+    (pickIds.has(t.vocadbId) && t.eventsNonSelf > 0),
 );
 
 // ---------- VocaDB 영상 ID ----------
@@ -145,16 +155,12 @@ await Promise.all(
 await fs.writeFile(pvCachePath, JSON.stringify(pvCache));
 
 // ---------- songs.json ----------
-const prev = await readJson<Song[]>(R("public", "songs.json"), []);
-const keep = new Map(prev.filter((s) => typeof s.id === "number").map((s) => [s.id, s]));
-
-const songs: Song[] = picked.map((t) => {
+const songs: SongData[] = picked.map((t) => {
   const uses = t.used.filter((u) => !u.self);
-  const byKind: Song["stats"]["byKind"] = {};
+  const byKind: SongData["stats"]["byKind"] = {};
   for (const kind of new Set(uses.map((u) => u.kind))) {
     byKind[toKind(kind)] = new Set(uses.filter((u) => u.kind === kind).map((u) => u.eventId)).size;
   }
-  const old: Partial<Song> = keep.get(t.vocadbId) || {};
   const pv = pvCache[t.vocadbId] ?? { yt: null, nico: null };
   return {
     id: t.vocadbId,
@@ -164,7 +170,7 @@ const songs: Song[] = picked.map((t) => {
     producer: t.producers,
     vocal: t.vocal,
     pub: t.pub,
-    yt: pv.yt || null,
+    yt: YT_FIX[t.vocadbId] || pv.yt || null,
     nico: pv.nico || null,
     stats: { events: t.eventsNonSelf, kr: t.kr, jp: t.jp, byKind },
     uses: t.used.map((u) => ({
@@ -175,25 +181,14 @@ const songs: Song[] = picked.map((t) => {
       src: u.source,
       ...(u.self ? { self: true as const } : {}),
     })),
-    tags: old.tags || [],
-    why: old.why || "",
   };
 });
-
-// 집계 기준에는 안 들지만 직접 넣은 곡(tags 나 why 가 있는 곡)은 그대로 남긴다. 예: 노점상
-const built = new Set(songs.map((s) => s.id));
-const manual = prev.filter(
-  (s) => typeof s.id === "number" && !built.has(s.id) && ((s.tags || []).length || s.why),
-);
-songs.push(...manual);
 
 await fs.writeFile(R("public", "events.json"), JSON.stringify(events, null, 1) + "\n");
 await fs.writeFile(R("public", "songs.json"), JSON.stringify(songs, null, 1) + "\n");
 
 const noVideo = songs.filter((s) => !s.yt && !s.nico).length;
-console.log(
-  `곡 ${songs.length}개 (집계 ${songs.length - manual.length} + 직접 넣은 곡 ${manual.length}, 신곡 기준일 ${NEW_SINCE}), 행사 ${events.length}개`,
-);
+console.log(`곡 ${songs.length}개 (신곡 기준일 ${NEW_SINCE}), 행사 ${events.length}개`);
 console.log(
   `YouTube ${songs.filter((s) => s.yt).length}개, 니코동만 ${songs.filter((s) => !s.yt && s.nico).length}개, 영상 없음 ${noVideo}개`,
 );

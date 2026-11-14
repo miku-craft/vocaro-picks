@@ -2,8 +2,9 @@ import { render, nothing } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
 import { matches, byKey } from "./rules.ts";
 import { SECTIONS } from "./sections.ts";
-import { card, sectionTabs, detail } from "./views.ts";
-import type { EventInfo, SortKey, Song } from "./types.ts";
+import { withPicks } from "./picks.ts";
+import { card, sectionTabs, detail, playlist } from "./views.ts";
+import type { EventInfo, SongData, SortKey, Song } from "./types.ts";
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector<T>(s)!;
 const dlg = $<HTMLDialogElement>("#detail");
@@ -22,6 +23,7 @@ autoplay.addEventListener("change", () => {
 });
 const state = {
   songs: [] as Song[],
+  shown: [] as Song[], // 지금 화면에 보이는 목록 (연속 재생에 사용)
   events: new Map<string, EventInfo>(),
   active: null as string | null, // 섹션 key (null = 전체)
 };
@@ -52,6 +54,7 @@ function update() {
   const shown = state.songs
     .filter((s) => (!section || matches(s, section.where)) && searchText(s).includes(query))
     .sort(byKey((sort.value as SortKey | "") || section?.sort || "-stats.events"));
+  state.shown = shown;
 
   render(sectionTabs(SECTIONS, state.active, selectSection), $("#sections"));
   $("#section-desc").textContent = `${section ? `${section.desc} -` : "전체"} ${shown.length}곡`;
@@ -97,6 +100,12 @@ dlg.addEventListener("close", () => {
 dlg.addEventListener("click", (e) => {
   if (e.target === dlg) dlg.close();
 });
+$("#play-all").addEventListener("click", () => {
+  render(playlist(state.shown), $("#detail-content"));
+  history.replaceState(null, "", location.pathname + location.search);
+  if (!dlg.open) dlg.showModal();
+  dlg.scrollTop = 0;
+});
 q.addEventListener("input", update);
 sort.addEventListener("change", update);
 
@@ -106,9 +115,9 @@ const load = <T>(name: string): Promise<T> =>
     return r.json();
   });
 
-Promise.all([load<Song[]>("songs"), load<EventInfo[]>("events")])
+Promise.all([load<SongData[]>("songs"), load<EventInfo[]>("events")])
   .then(([songs, events]) => {
-    state.songs = songs;
+    state.songs = withPicks(songs);
     state.events = new Map(events.map((e) => [e.id, e]));
     update();
     openFromHash();
