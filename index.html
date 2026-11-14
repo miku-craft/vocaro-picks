@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>보카로 트렌드</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>보카로 트렌드</h1>
+    <div class="controls">
+      <input id="q" type="search" placeholder="제목·P·보컬·태그 검색" aria-label="검색">
+      <select id="sort" aria-label="정렬">
+        <option value="year">연도순</option>
+        <option value="-year">최신순</option>
+        <option value="title">제목순</option>
+      </select>
+    </div>
+    <div id="tags" class="tags"></div>
+  </header>
+  <main id="list"></main>
+
+  <template id="card">
+    <article class="card">
+      <button class="thumb" type="button" aria-label="재생"><img loading="lazy" alt=""></button>
+      <div class="body">
+        <h2></h2>
+        <p class="meta"></p>
+        <p class="why"></p>
+        <ul class="tags"></ul>
+        <a target="_blank" rel="noopener">니코동에서 보기 ↗</a>
+      </div>
+    </article>
+  </template>
+
+  <script>
+    const $ = (s) => document.querySelector(s);
+    let songs = [];
+    let activeTag = null;
+
+    function render() {
+      const q = $('#q').value.trim().toLowerCase();
+      const key = $('#sort').value;
+      const desc = key.startsWith('-');
+      const field = key.replace('-', '');
+
+      const shown = songs
+        .filter((s) => !activeTag || s.tags.includes(activeTag))
+        .filter((s) => !q || [s.title, s.producer, ...s.vocal, ...s.tags].join(' ').toLowerCase().includes(q))
+        .sort((a, b) => (a[field] > b[field] ? 1 : a[field] < b[field] ? -1 : 0) * (desc ? -1 : 1));
+
+      $('#list').replaceChildren(...shown.map(card));
+      if (!shown.length) $('#list').textContent = '조건에 맞는 곡이 없어요.';
+    }
+
+    function card(s) {
+      const el = $('#card').content.cloneNode(true);
+      const num = s.id.replace(/\D/g, '');
+      el.querySelector('img').src = `https://nicovideo.cdn.nimg.jp/thumbnails/${num}/${num}`;
+      el.querySelector('img').alt = s.title;
+      el.querySelector('h2').textContent = s.title;
+      el.querySelector('.meta').textContent = `${s.producer} · ${s.vocal.join(', ')} · ${s.year}`;
+      el.querySelector('.why').textContent = s.why;
+      el.querySelector('ul.tags').append(...s.tags.map((t) => Object.assign(document.createElement('li'), { textContent: t })));
+      el.querySelector('a').href = `https://www.nicovideo.jp/watch/${s.id}`;
+      // 클릭할 때만 iframe 로드 (임베드 여러 개 동시 로드 방지)
+      el.querySelector('.thumb').addEventListener('click', (e) => {
+        const f = document.createElement('iframe');
+        f.src = `https://embed.nicovideo.jp/watch/${s.id}?autoplay=1`;
+        f.allow = 'autoplay; fullscreen';
+        f.title = s.title;
+        e.currentTarget.replaceWith(f);
+      });
+      return el;
+    }
+
+    function renderTags() {
+      const all = [...new Set(songs.flatMap((s) => s.tags))];
+      $('#tags').replaceChildren(...all.map((t) => {
+        const b = Object.assign(document.createElement('button'), { type: 'button', textContent: t });
+        b.setAttribute('aria-pressed', t === activeTag);
+        b.onclick = () => { activeTag = activeTag === t ? null : t; renderTags(); render(); };
+        return b;
+      }));
+    }
+
+    $('#q').addEventListener('input', render);
+    $('#sort').addEventListener('change', render);
+
+    fetch('songs.json')
+      .then((r) => r.json())
+      .then((data) => { songs = data; renderTags(); render(); })
+      .catch(() => { $('#list').textContent = 'songs.json을 불러오지 못했어요.'; });
+  </script>
+</body>
+</html>
