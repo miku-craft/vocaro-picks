@@ -1,0 +1,21 @@
+{
+  "name": "vocaro-picks",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "data": "node scripts/build-data.mjs",
+    "format": "prettier --write .",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "dependencies": {
+    "lit-html": "^3.3.3"
+  },
+  "devDependencies": {
+    "prettier": "^3.10.1",
+    "vite": "^8.3.8",
+    "wrangler": "^4.162.0"
+  }
+}
