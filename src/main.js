@@ -7,30 +7,19 @@ const dlg = $("#detail");
 const state = { songs: [], sections: [], events: new Map(), active: null }; // active: 섹션 key (null = 전체)
 
 const searchText = (s) =>
-  [s.title, s.titleKo, ...s.producer, ...s.vocal, ...s.tags]
-    .join(" ")
-    .toLowerCase();
+  [s.title, s.titleKo, ...s.producer, ...s.vocal, ...s.tags].join(" ").toLowerCase();
 
 function update() {
   const q = $("#q").value.trim().toLowerCase();
   const section = state.sections.find((s) => s.key === state.active);
   const shown = state.songs
-    .filter(
-      (s) =>
-        (!section || matches(s, section.where)) && searchText(s).includes(q),
-    )
+    .filter((s) => (!section || matches(s, section.where)) && searchText(s).includes(q))
     .sort(byKey($("#sort").value || section?.sort || "-stats.events"));
 
+  render(sectionTabs(state.sections, state.active, selectSection), $("#sections"));
+  $("#section-desc").textContent = `${section ? `${section.desc} ·` : "전체"} ${shown.length}곡`;
   render(
-    sectionTabs(state.sections, state.active, selectSection),
-    $("#sections"),
-  );
-  $("#section-desc").textContent =
-    `${section ? `${section.desc} ·` : "전체"} ${shown.length}곡`;
-  render(
-    shown.length
-      ? shown.map((s) => card(s, openDetail))
-      : "조건에 맞는 곡이 없어요.",
+    shown.length ? shown.map((s) => card(s, openDetail)) : "조건에 맞는 곡이 없어요.",
     $("#list"),
   );
 }
@@ -84,6 +73,5 @@ Promise.all(["songs", "sections", "events"].map(load))
     window.addEventListener("hashchange", openFromHash);
   })
   .catch(() => {
-    $("#list").textContent =
-      "데이터를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.";
+    $("#list").textContent = "데이터를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.";
   });

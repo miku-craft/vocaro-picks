@@ -13,16 +13,13 @@ import {
   eventDate,
 } from "./format.js";
 
-const extLink = (href, text) =>
-  html`<a href=${href} target="_blank" rel="noopener">${text} ↗</a>`;
+const extLink = (href, text) => html`<a href=${href} target="_blank" rel="noopener">${text} ↗</a>`;
 
 export const card = (s, onOpen) => html`
   <article class="card">
     <button class="open" type="button" @click=${() => onOpen(s)}>
       ${
-        thumbUrl(s)
-          ? html`<img class="thumb" loading="lazy" alt="" src=${thumbUrl(s)} />`
-          : nothing
+        thumbUrl(s) ? html`<img class="thumb" loading="lazy" alt="" src=${thumbUrl(s)} />` : nothing
       }
       <span class="body">
         <span class="title">${koTitle(s)}</span>
@@ -51,15 +48,12 @@ export const sectionTabs = (sections, active, onSelect) =>
 // 행사 하나: 제목 줄 + 그 행사에서 쓰인 세션 목록
 const useItem = (e, id, list) => html`
   <li>
-    <div class="use-head">
-      ${FLAG[e?.country] ?? ""} ${eventDate(e)} ${e?.name ?? id}
-    </div>
+    <div class="use-head">${FLAG[e?.country] ?? ""} ${eventDate(e)} ${e?.name ?? id}</div>
     <ul>
       ${list.map(
         (u) =>
           html`<li>
-            ${KIND[u.kind] ?? u.kind} ·
-            ${u.session}${u.self ? " (DJ 본인 곡)" : ""}
+            ${KIND[u.kind] ?? u.kind} · ${u.session}${u.self ? " (DJ 본인 곡)" : ""}
             ${u.src ? extLink(u.src, "출처") : nothing}
           </li>`,
       )}
@@ -74,9 +68,8 @@ export function detail(s, events) {
     .join(" · ");
   const tags = s.tags.filter((t) => t !== "pick");
   // 행사별로 묶어서 최근 행사부터
-  const byEvent = Object.entries(Object.groupBy(s.uses, (u) => u.ev)).sort(
-    ([a], [b]) =>
-      (events.get(b)?.from ?? "").localeCompare(events.get(a)?.from ?? ""),
+  const byEvent = Object.entries(Object.groupBy(s.uses, (u) => u.ev)).sort(([a], [b]) =>
+    (events.get(b)?.from ?? "").localeCompare(events.get(a)?.from ?? ""),
   );
   const links = [
     s.yt && extLink(`https://www.youtube.com/watch?v=${s.yt}`, "YouTube"),
@@ -107,11 +100,7 @@ export function detail(s, events) {
           : nothing
       }
       <p class="meta">
-        ${[
-          s.producer.join(", "),
-          vocalShort(s, 8),
-          s.pub && `${fmt(s.pub)} 발표`,
-        ]
+        ${[s.producer.join(", "), vocalShort(s, 8), s.pub && `${fmt(s.pub)} 발표`]
           .filter(Boolean)
           .join(" · ")}
       </p>
@@ -129,9 +118,7 @@ export function detail(s, events) {
         ${
           byEvent.length
             ? byEvent.map(([id, list]) => useItem(events.get(id), id, list))
-            : html`<li class="empty">
-                아직 수집한 행사 셋리에는 나오지 않았어요.
-              </li>`
+            : html`<li class="empty">아직 수집한 행사 셋리에는 나오지 않았어요.</li>`
         }
       </ol>
       <p class="links">${links.map((a, i) => html`${i ? " · " : ""}${a}`)}</p>

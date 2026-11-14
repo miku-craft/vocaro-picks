@@ -74,11 +74,8 @@ const pvCache = await readJson(pvCachePath, {});
 const pickPv = (pvs, service) => {
   const ok = pvs.filter((p) => p.service === service && !p.disabled);
   return (
-    (
-      ok.find((p) => p.pvType === "Original") ||
-      ok.find((p) => p.pvType === "Reprint") ||
-      ok[0]
-    )?.pvId || null
+    (ok.find((p) => p.pvType === "Original") || ok.find((p) => p.pvType === "Reprint") || ok[0])
+      ?.pvId || null
   );
 };
 const need = picked.filter((t) => !(t.vocadbId in pvCache));
@@ -88,9 +85,7 @@ await Promise.all(
     while (i < need.length) {
       const t = need[i++];
       try {
-        const r = await fetch(
-          `https://vocadb.net/api/songs/${t.vocadbId}?fields=PVs`,
-        );
+        const r = await fetch(`https://vocadb.net/api/songs/${t.vocadbId}?fields=PVs`);
         if (!r.ok) continue;
         const j = await r.json();
         pvCache[t.vocadbId] = {
@@ -107,17 +102,13 @@ await fs.writeFile(pvCachePath, JSON.stringify(pvCache));
 
 // ---------- songs.json ----------
 const prev = await readJson(R("public", "songs.json"), []);
-const keep = new Map(
-  prev.filter((s) => typeof s.id === "number").map((s) => [s.id, s]),
-);
+const keep = new Map(prev.filter((s) => typeof s.id === "number").map((s) => [s.id, s]));
 
 const songs = picked.map((t) => {
   const uses = t.used.filter((u) => !u.self);
   const byKind = {};
   for (const kind of new Set(uses.map((u) => u.kind))) {
-    byKind[kind] = new Set(
-      uses.filter((u) => u.kind === kind).map((u) => u.eventId),
-    ).size;
+    byKind[kind] = new Set(uses.filter((u) => u.kind === kind).map((u) => u.eventId)).size;
   }
   const old = keep.get(t.vocadbId) || {};
   const pv = pvCache[t.vocadbId] || {};
@@ -125,8 +116,7 @@ const songs = picked.map((t) => {
     id: t.vocadbId,
     title: t.title.trim(),
     titleKo: t.titleKo && t.titleKo !== t.title.trim() ? t.titleKo : null,
-    titleKoUnverified:
-      t.titleKoSource === "번역" && t.titleKoCheck !== "유튜브 일치",
+    titleKoUnverified: t.titleKoSource === "번역" && t.titleKoCheck !== "유튜브 일치",
     producer: t.producers,
     vocal: t.vocal,
     pub: t.pub,
@@ -149,21 +139,12 @@ const songs = picked.map((t) => {
 // 집계 기준에는 안 들지만 직접 넣은 곡(tags 나 why 가 있는 곡)은 그대로 남긴다. 예: 에디터 픽
 const built = new Set(songs.map((s) => s.id));
 const manual = prev.filter(
-  (s) =>
-    typeof s.id === "number" &&
-    !built.has(s.id) &&
-    ((s.tags || []).length || s.why),
+  (s) => typeof s.id === "number" && !built.has(s.id) && ((s.tags || []).length || s.why),
 );
 songs.push(...manual);
 
-await fs.writeFile(
-  R("public", "events.json"),
-  JSON.stringify(events, null, 1) + "\n",
-);
-await fs.writeFile(
-  R("public", "songs.json"),
-  JSON.stringify(songs, null, 1) + "\n",
-);
+await fs.writeFile(R("public", "events.json"), JSON.stringify(events, null, 1) + "\n");
+await fs.writeFile(R("public", "songs.json"), JSON.stringify(songs, null, 1) + "\n");
 
 const noVideo = songs.filter((s) => !s.yt && !s.nico).length;
 console.log(

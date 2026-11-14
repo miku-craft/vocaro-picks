@@ -38,7 +38,7 @@ npm install
 npm run dev       # 개발 서버 (저장하면 바로 반영)
 npm run build     # dist/ 에 배포용 파일 생성
 npm run preview   # dist/ 를 배포와 같은 형태로 확인
-npm run format    # Prettier로 코드 정리
+npm run format    # oxfmt로 코드 정리
 ```
 
 `npm run dev` 후 안내되는 주소(기본 http://localhost:5173)를 열면 됩니다.
