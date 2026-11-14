@@ -1,15 +1,13 @@
 // 화면에 보여 줄 문자열과 URL 만들기
-import type { Country, EventInfo, Kind, Song } from "./types.ts";
+import { lang, t } from "./i18n.ts";
+import type { Country, EventInfo, Song } from "./types.ts";
 
-export const KIND: Record<Kind, string> = {
-  랜플댄: "랜덤플레이댄스",
-  DJ: "DJ",
-  공연: "공연",
-  커버: "밴드 커버",
-};
 export const FLAG: Record<Country, string> = { KR: "🇰🇷", JP: "🇯🇵" };
 
-export const koTitle = (s: Song) => s.titleKo || s.title;
+// 한국어 화면은 한국어 제목, 일본어 화면은 원제
+export const displayTitle = (s: Song) => (lang === "ko" && s.titleKo) || s.title;
+// 제목 아래 작게 보여 줄 원제 (한국어 제목을 보여 줄 때만)
+export const subTitle = (s: Song) => (displayTitle(s) !== s.title ? s.title : "");
 export const isPick = (s: Song) => s.tags.includes("pick");
 
 export const thumbUrl = (s: Song) => {
@@ -37,20 +35,18 @@ const voiceName = (v: string) =>
 export const vocalShort = (s: Song, max = 3) => {
   const names = [...new Set(s.vocal.map(voiceName))];
   const rest = names.length - max;
-  return names.slice(0, max).join(", ") + (rest > 0 ? ` 외 ${rest}` : "");
+  return names.slice(0, max).join(", ") + (rest > 0 ? t.more(rest) : "");
 };
 
 export const badgeText = (s: Song) =>
   [
-    isPick(s) && "★ 노점상",
-    s.stats.events
-      ? `행사 ${s.stats.events}곳, ${FLAG.KR} ${s.stats.kr}, ${FLAG.JP} ${s.stats.jp}`
-      : "아직 수집한 셋리에는 없어요",
+    isPick(s) && t.pickBadge,
+    s.stats.events ? t.eventsBadge(s.stats.events, s.stats.kr, s.stats.jp) : t.noUsesBadge,
   ]
     .filter(Boolean)
     .join(" - ");
 
-export const fmt = (d: string | null) => (d ? d.replaceAll("-", ".") : "날짜 미확인");
+export const fmt = (d: string | null) => (d ? d.replaceAll("-", ".") : t.dateUnknown);
 
 export const eventDate = (e?: EventInfo) => {
   if (!e?.from) return "";

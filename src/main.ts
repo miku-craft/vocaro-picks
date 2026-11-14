@@ -1,5 +1,6 @@
 import { render, nothing } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
+import { lang, langParam, t } from "./i18n.ts";
 import { DEFAULT_SORT, SECTIONS, SORTS } from "./sections.ts";
 import { withPicks } from "./picks.ts";
 import { card, sectionTabs, detail, playlist } from "./views.ts";
@@ -10,6 +11,35 @@ const dlg = $<HTMLDialogElement>("#detail");
 const q = $<HTMLInputElement>("#q");
 const sort = $<HTMLSelectElement>("#sort");
 const autoplay = $<HTMLInputElement>("#autoplay");
+
+// index.html 에 적힌 한국어 문구를 고른 언어로 바꾼다
+document.documentElement.lang = lang;
+document.title = t.siteTitle;
+$("h1").textContent = t.siteTitle;
+$(".lead").textContent = t.lead;
+q.placeholder = t.searchPlaceholder;
+q.ariaLabel = t.search;
+sort.ariaLabel = t.sort;
+[t.sortDefault, t.sortEvents, t.sortNew, t.sortTitle].forEach((text, i) => {
+  sort.options[i]!.text = text;
+});
+$("#autoplay-label").textContent = t.autoplay;
+$("#play-all").textContent = t.playAll;
+$("#sections").ariaLabel = t.sectionsNav;
+$("#detail .close").ariaLabel = t.close;
+
+// 언어 전환: 지금 주소(섹션, 검색어, 정렬)는 그대로 두고 ?lang= 만 바꿔 다시 연다
+const langLink = $<HTMLAnchorElement>("#lang");
+const otherLang = lang === "ja" ? "ko" : "ja";
+langLink.textContent = t.otherLang;
+langLink.hreflang = otherLang;
+langLink.href = `?lang=${otherLang}`; // 새 탭으로 열 때를 위한 기본 주소
+langLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  const p = new URLSearchParams(location.search);
+  p.set("lang", otherLang);
+  location.search = p.toString();
+});
 
 // 자동재생 설정은 이 브라우저에만 기억한다 (기본은 꺼짐)
 try {
@@ -40,6 +70,7 @@ function saveToUrl() {
   if (state.active) p.set("s", state.active);
   if (q.value.trim()) p.set("q", q.value.trim());
   if (sort.value) p.set("sort", sort.value);
+  if (langParam) p.set("lang", lang);
   const qs = p.toString();
   history.replaceState(null, "", `${location.pathname}${qs ? `?${qs}` : ""}${location.hash}`);
 }
@@ -56,7 +87,8 @@ function update() {
   state.shown = shown;
 
   render(sectionTabs(SECTIONS, state.active, selectSection), $("#sections"));
-  $("#section-desc").textContent = `${section ? `${section.desc} -` : "전체"} ${shown.length}곡`;
+  $("#section-desc").textContent =
+    `${section ? `${section.desc} -` : t.all} ${t.count(shown.length)}`;
   render(
     // 곡 id를 키로 카드 DOM을 재사용해서, 검색이나 정렬이 바뀌어도 썸네일이 다시 로드되지 않게 한다
     shown.length
@@ -65,7 +97,7 @@ function update() {
           (s) => s.id,
           (s) => card(s, openDetail),
         )
-      : "조건에 맞는 곡이 없어요.",
+      : t.noMatch,
     $("#list"),
   );
   saveToUrl();
@@ -123,5 +155,5 @@ Promise.all([load<SongData[]>("songs"), load<EventInfo[]>("events")])
     window.addEventListener("hashchange", openFromHash);
   })
   .catch(() => {
-    $("#list").textContent = "데이터를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.";
+    $("#list").textContent = t.loadError;
   });

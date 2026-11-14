@@ -1,7 +1,9 @@
 // public/*.json 과 섹션 정의의 모양. JSON은 scripts/build-data.ts 가 만들고 화면이 읽는다.
 
 export type Country = "KR" | "JP";
-export type Kind = "랜플댄" | "DJ" | "공연" | "커버";
+// 쓰인 방식. 순서는 상세 창에 표시하는 순서
+export const KINDS = ["랜플댄", "DJ", "공연", "커버"] as const;
+export type Kind = (typeof KINDS)[number];
 
 export interface Use {
   ev: string; // EventInfo.id

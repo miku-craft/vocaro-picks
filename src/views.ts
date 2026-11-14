@@ -1,9 +1,10 @@
 // lit-html 템플릿: 카드, 섹션 버튼, 상세 창
 import { html, nothing } from "lit-html";
+import { t } from "./i18n.ts";
 import {
-  KIND,
   FLAG,
-  koTitle,
+  displayTitle,
+  subTitle,
   isPick,
   thumbUrl,
   embedUrl,
@@ -12,7 +13,7 @@ import {
   fmt,
   eventDate,
 } from "./format.ts";
-import type { EventInfo, Kind, Section, Song, Use } from "./types.ts";
+import { KINDS, type EventInfo, type Section, type Song, type Use } from "./types.ts";
 
 const extLink = (href: string, text: string) =>
   html`<a href=${href} target="_blank" rel="noopener">${text} ↗</a>`;
@@ -24,8 +25,8 @@ export const card = (s: Song, onOpen: (s: Song) => void) => html`
         thumbUrl(s) ? html`<img class="thumb" loading="lazy" alt="" src=${thumbUrl(s)} />` : nothing
       }
       <span class="body">
-        <span class="title">${koTitle(s)}</span>
-        ${s.titleKo ? html`<span class="title-ja">${s.title}</span>` : nothing}
+        <span class="title">${displayTitle(s)}</span>
+        ${subTitle(s) ? html`<span class="title-ja">${subTitle(s)}</span>` : nothing}
         <span class="meta">${s.producer.join(", ")} - ${vocalShort(s)}</span>
         <span class="badges">${badgeText(s)}</span>
         ${isPick(s) && s.why ? html`<span class="why-line">${s.why}</span>` : nothing}
@@ -39,7 +40,7 @@ export const sectionTabs = (
   active: string | null,
   onSelect: (key: string | null) => void,
 ) =>
-  [{ key: null, title: "전체" }, ...sections].map(
+  [{ key: null, title: t.all }, ...sections].map(
     (sec) => html`
       <button
         type="button"
@@ -59,8 +60,8 @@ const useItem = (e: EventInfo | undefined, id: string, list: Use[]) => html`
       ${list.map(
         (u) =>
           html`<li>
-            ${KIND[u.kind]} - ${u.session}${u.self ? " (DJ 본인 곡)" : ""}
-            ${u.src ? extLink(u.src, "출처") : nothing}
+            ${t.kind[u.kind]} - ${u.session}${u.self ? t.selfSong : ""}
+            ${u.src ? extLink(u.src, t.source) : nothing}
           </li>`,
       )}
     </ul>
@@ -69,9 +70,8 @@ const useItem = (e: EventInfo | undefined, id: string, list: Use[]) => html`
 
 export function detail(s: Song, events: Map<string, EventInfo>, autoplay: boolean) {
   const src = embedUrl(s, autoplay);
-  const kinds = (Object.keys(KIND) as Kind[])
-    .filter((k) => s.stats.byKind[k])
-    .map((k) => `${KIND[k]} ${s.stats.byKind[k]}`)
+  const kinds = KINDS.filter((k) => s.stats.byKind[k])
+    .map((k) => `${t.kind[k]} ${s.stats.byKind[k]}`)
     .join(", ");
   // 행사별로 묶어서 최근 행사부터
   const byEvent = [...Map.groupBy(s.uses, (u) => u.ev)].sort(([a], [b]) =>
@@ -79,7 +79,7 @@ export function detail(s: Song, events: Map<string, EventInfo>, autoplay: boolea
   );
   const links = [
     s.yt && extLink(`https://www.youtube.com/watch?v=${s.yt}`, "YouTube"),
-    s.nico && extLink(`https://www.nicovideo.jp/watch/${s.nico}`, "니코동"),
+    s.nico && extLink(`https://www.nicovideo.jp/watch/${s.nico}`, t.nico),
     extLink(`https://vocadb.net/S/${s.id}`, "VocaDB"),
   ].filter(Boolean);
 
@@ -93,31 +93,31 @@ export function detail(s: Song, events: Map<string, EventInfo>, autoplay: boolea
               allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
               allowfullscreen
             ></iframe>`
-          : html`<p class="no-video">등록된 영상이 없어요.</p>`
+          : html`<p class="no-video">${t.noVideo}</p>`
       }
     </div>
     <div class="detail-body">
-      <h2 id="detail-title">${koTitle(s)}</h2>
+      <h2 id="detail-title">${displayTitle(s)}</h2>
       ${
-        s.titleKo
+        subTitle(s)
           ? html`<p class="title-ja">
-              ${s.title}${s.titleKoUnverified ? " (한국어 제목은 임시 번역)" : ""}
+              ${subTitle(s)}${s.titleKoUnverified ? t.koTitleUnverified : ""}
             </p>`
           : nothing
       }
       <p class="meta">
-        ${[s.producer.join(", "), vocalShort(s, 8), s.pub && `${fmt(s.pub)} 발표`]
+        ${[s.producer.join(", "), vocalShort(s, 8), s.pub && t.published(fmt(s.pub))]
           .filter(Boolean)
           .join(" - ")}
       </p>
       <p class="badges">${badgeText(s)}${kinds ? ` (${kinds})` : ""}</p>
       ${s.why ? html`<p class="why">${s.why}</p>` : nothing}
-      <h3>쓰인 행사</h3>
+      <h3>${t.usedAt}</h3>
       <ol class="uses">
         ${
           byEvent.length
             ? byEvent.map(([id, list]) => useItem(events.get(id), id, list))
-            : html`<li class="empty">아직 수집한 행사 셋리에는 나오지 않았어요.</li>`
+            : html`<li class="empty">${t.noUses}</li>`
         }
       </ol>
       <p class="links">${links.map((a, i) => html`${i ? ", " : ""}${a}`)}</p>
@@ -139,20 +139,18 @@ export function playlist(songs: Song[]) {
         list.length
           ? html`<iframe
               src=${`https://www.youtube-nocookie.com/embed/${list[0]?.yt}?autoplay=1&playlist=${ids}`}
-              title="목록 연속 재생"
+              title=${t.playlistTitle}
               allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
               allowfullscreen
             ></iframe>`
-          : html`<p class="no-video">재생할 YouTube 영상이 없어요.</p>`
+          : html`<p class="no-video">${t.playlistNone}</p>`
       }
     </div>
     <div class="detail-body">
-      <h2 id="detail-title">목록 연속 재생</h2>
-      <p class="meta">
-        ${list.length}곡${skipped ? ` (YouTube 영상이 없거나 199곡을 넘어 ${skipped}곡 제외)` : ""}
-      </p>
+      <h2 id="detail-title">${t.playlistTitle}</h2>
+      <p class="meta">${t.playlistCount(list.length, skipped)}</p>
       <ol class="queue">
-        ${list.map((s) => html`<li>${koTitle(s)} - ${s.producer.join(", ")}</li>`)}
+        ${list.map((s) => html`<li>${displayTitle(s)} - ${s.producer.join(", ")}</li>`)}
       </ol>
     </div>
   `;

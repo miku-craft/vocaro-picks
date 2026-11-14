@@ -7,8 +7,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import pMap from "p-map";
-import { KIND } from "../src/format.ts";
-import type { EventInfo, Kind, PickEntry, SongData } from "../src/types.ts";
+import { KINDS, type EventInfo, type Kind, type PickEntry, type SongData } from "../src/types.ts";
 
 // research/ 입력 파일 모양 (쓰는 필드만)
 interface RawEvent {
@@ -84,9 +83,9 @@ const readJson = async <T>(p: string, fallback: T): Promise<T> => {
   }
 };
 const isDate = (d: string | null | undefined) => /^\d{4}-\d{2}-\d{2}$/.test(d || "");
-// 조사 데이터의 kind 가 화면에서 아는 종류인지 확인한다. 새 종류면 format.ts 의 KIND 에 먼저 추가
+// 조사 데이터의 kind 가 화면에서 아는 종류인지 확인한다. 새 종류면 types.ts 의 KINDS 와 i18n.ts 의 kind 에 먼저 추가
 const toKind = (k: string): Kind => {
-  if (!Object.hasOwn(KIND, k)) throw new Error(`알 수 없는 kind: ${k}`);
+  if (!(KINDS as readonly string[]).includes(k)) throw new Error(`알 수 없는 kind: ${k}`);
   return k as Kind;
 };
 

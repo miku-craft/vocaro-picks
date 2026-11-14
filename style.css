@@ -40,6 +40,17 @@ h1 {
   margin: 8px 0 4px;
   color: var(--accent);
 }
+.lang {
+  float: right;
+  margin-top: 8px;
+  padding: 6px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
 .lead {
   margin: 0 0 16px;
   color: var(--muted);
