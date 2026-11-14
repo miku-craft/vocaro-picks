@@ -13,9 +13,9 @@ vocaro-picks/
 ├── index.html              페이지 뼈대 (헤더, 목록 자리, 상세 창)
 ├── style.css               스타일 (라이트/다크 모드 자동 전환)
 ├── src/
-│   ├── main.ts             데이터 불러오기, 검색·섹션·정렬, 상세 창 열고 닫기
+│   ├── main.ts             데이터 불러오기, 검색, 섹션, 정렬, 상세 창 열고 닫기
 │   ├── views.ts            lit-html 템플릿 (카드, 섹션 버튼, 상세 창)
-│   ├── format.ts           화면에 보일 문자열·URL 만들기
+│   ├── format.ts           화면에 보일 문자열과 URL 만들기
 │   ├── rules.ts            sections.json 규칙 해석
 │   └── types.ts            JSON 데이터 타입 (Song, EventInfo, Section)
 ├── public/
@@ -28,7 +28,7 @@ vocaro-picks/
 └── research/               행사 셋리 조사 자료 (커밋하지 않음)
 ```
 
-TypeScript로 작성했고, 화면은 [lit-html](https://lit.dev/docs/libraries/standalone-templates/)로 그리고, [Vite](https://vite.dev/)로 빌드합니다.
+TypeScript로 작성했습니다. 화면은 [lit-html](https://lit.dev/docs/libraries/standalone-templates/)로 그리고 [Vite](https://vite.dev/)로 빌드합니다.
 
 ## 로컬에서 보기
 
@@ -88,17 +88,17 @@ npm run data
 }
 ```
 
-| 필드                | 설명                                                                  |
-| ------------------- | --------------------------------------------------------------------- |
-| `id`                | VocaDB 곡 ID. 곡을 구분하는 key이고 공유 링크(`#song-920272`)에도 씀  |
-| `title` / `titleKo` | 원제 / 한국어 제목 (`titleKoUnverified: true`면 임시 번역)            |
-| `producer`, `vocal` | 작곡가(P), 보컬 음원                                                  |
-| `pub`               | VocaDB 기준 발표일                                                    |
-| `yt`, `nico`        | YouTube·니코동 영상 ID. 썸네일과 상세 창 임베드에 사용 (YouTube 우선) |
-| `stats`             | 쓰인 행사 수 (`events` 전체, `kr` 한국, `jp` 일본, `byKind` 종류별)   |
-| `uses`              | 쓰인 기록. `ev`는 `events.json`의 행사 ID                             |
-| `tags`              | 직접 붙이는 분류 key (예: `pick`). 빌드해도 유지                      |
-| `why`               | 추천 근거. 빌드해도 유지                                              |
+| 필드                | 설명                                                                   |
+| ------------------- | ---------------------------------------------------------------------- |
+| `id`                | VocaDB 곡 ID. 곡을 구분하는 key이고 공유 링크(`#song-920272`)에도 씀   |
+| `title` / `titleKo` | 원제 / 한국어 제목 (`titleKoUnverified: true`면 임시 번역)             |
+| `producer`, `vocal` | 작곡가(P), 보컬 음원                                                   |
+| `pub`               | VocaDB 기준 발표일                                                     |
+| `yt`, `nico`        | YouTube, 니코동 영상 ID. 썸네일과 상세 창 임베드에 사용 (YouTube 우선) |
+| `stats`             | 쓰인 행사 수 (`events` 전체, `kr` 한국, `jp` 일본, `byKind` 종류별)    |
+| `uses`              | 쓰인 기록. `ev`는 `events.json`의 행사 ID                              |
+| `tags`              | 직접 붙이는 분류 key (예: `pick`). 빌드해도 유지                       |
+| `why`               | 추천 근거. 빌드해도 유지                                               |
 
 ## 에디터 픽 넣기
 
@@ -130,7 +130,7 @@ npm run data
 
 ## 배포
 
-Cloudflare Workers(정적 파일만)로 배포합니다. 저장소가 Cloudflare Workers Builds에 연결되어 있어서 `main`에 push하면 자동으로 빌드·배포됩니다.
+Cloudflare Workers(정적 파일만)로 배포합니다. 저장소가 Cloudflare Workers Builds에 연결되어 있어서 `main`에 push하면 자동으로 빌드하고 배포합니다.
 
 | 항목          | 값                    |
 | ------------- | --------------------- |
@@ -139,5 +139,5 @@ Cloudflare Workers(정적 파일만)로 배포합니다. 저장소가 Cloudflare
 | 루트 디렉터리 | `/`                   |
 
 - 배포 설정은 `wrangler.jsonc`에 있습니다. `dist/`의 파일만 올라갑니다.
-- 커스텀 도메인(예: `vocaro.witch.work`)은 Cloudflare 대시보드의 Worker → Settings → Domains & Routes에서 추가하거나, `wrangler.jsonc`의 `routes` 주석을 풀어서 설정합니다.
+- 커스텀 도메인(예: `vocaro.witch.work`)은 Cloudflare 대시보드의 Worker > Settings > Domains & Routes에서 추가하거나, `wrangler.jsonc`의 `routes` 주석을 풀어서 설정합니다.
 - 로컬에서 직접 배포하려면 `npx wrangler login` 후 `npm run deploy`를 실행합니다.

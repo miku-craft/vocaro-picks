@@ -1,4 +1,4 @@
-// 화면에 보여 줄 문자열·URL 만들기
+// 화면에 보여 줄 문자열과 URL 만들기
 import type { Country, EventInfo, Song } from "./types.ts";
 
 export const KIND: Record<string, string> = {
@@ -42,11 +42,11 @@ export const badgeText = (s: Song) =>
   [
     isPick(s) && "★ 에디터 픽",
     s.stats.events
-      ? `행사 ${s.stats.events}곳 · ${FLAG.KR} ${s.stats.kr} · ${FLAG.JP} ${s.stats.jp}`
+      ? `행사 ${s.stats.events}곳, ${FLAG.KR} ${s.stats.kr}, ${FLAG.JP} ${s.stats.jp}`
       : "아직 수집한 셋리에는 없어요",
   ]
     .filter(Boolean)
-    .join(" · ");
+    .join(" - ");
 
 export const fmt = (d: string | null) => (d ? d.replaceAll("-", ".") : "날짜 미확인");
 

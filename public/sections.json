@@ -30,7 +30,7 @@
   },
   {
     "key": "club",
-    "title": "클럽·DJ 단골",
+    "title": "클럽 DJ 단골",
     "desc": "DJ 셋 3곳 이상",
     "where": { "stats.byKind.DJ": ">=3" },
     "sort": "-stats.byKind.DJ"

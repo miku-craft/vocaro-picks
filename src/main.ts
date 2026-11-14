@@ -26,9 +26,9 @@ function update() {
     .sort(byKey(sort.value || section?.sort || "-stats.events"));
 
   render(sectionTabs(state.sections, state.active, selectSection), $("#sections"));
-  $("#section-desc").textContent = `${section ? `${section.desc} ·` : "전체"} ${shown.length}곡`;
+  $("#section-desc").textContent = `${section ? `${section.desc} -` : "전체"} ${shown.length}곡`;
   render(
-    // 곡 id를 키로 카드 DOM을 재사용해서, 검색·정렬이 바뀌어도 썸네일이 다시 로드되지 않게 한다
+    // 곡 id를 키로 카드 DOM을 재사용해서, 검색이나 정렬이 바뀌어도 썸네일이 다시 로드되지 않게 한다
     shown.length
       ? repeat(
           shown,

@@ -26,7 +26,7 @@ export const card = (s: Song, onOpen: (s: Song) => void) => html`
       <span class="body">
         <span class="title">${koTitle(s)}</span>
         ${s.titleKo ? html`<span class="title-ja">${s.title}</span>` : nothing}
-        <span class="meta">${s.producer.join(", ")} · ${vocalShort(s)}</span>
+        <span class="meta">${s.producer.join(", ")} - ${vocalShort(s)}</span>
         <span class="badges">${badgeText(s)}</span>
         ${isPick(s) && s.why ? html`<span class="why-line">${s.why}</span>` : nothing}
       </span>
@@ -59,7 +59,7 @@ const useItem = (e: EventInfo | undefined, id: string, list: Use[]) => html`
       ${list.map(
         (u) =>
           html`<li>
-            ${KIND[u.kind] ?? u.kind} · ${u.session}${u.self ? " (DJ 본인 곡)" : ""}
+            ${KIND[u.kind] ?? u.kind} - ${u.session}${u.self ? " (DJ 본인 곡)" : ""}
             ${u.src ? extLink(u.src, "출처") : nothing}
           </li>`,
       )}
@@ -71,7 +71,7 @@ export function detail(s: Song, events: Map<string, EventInfo>) {
   const src = embedUrl(s);
   const kinds = Object.entries(s.stats.byKind)
     .map(([k, n]) => `${KIND[k] ?? k} ${n}`)
-    .join(" · ");
+    .join(", ");
   const tags = s.tags.filter((t) => t !== "pick");
   // 행사별로 묶어서 최근 행사부터
   const byEvent = [...Map.groupBy(s.uses, (u) => u.ev)].sort(([a], [b]) =>
@@ -101,14 +101,14 @@ export function detail(s: Song, events: Map<string, EventInfo>) {
       ${
         s.titleKo
           ? html`<p class="title-ja">
-              ${s.title}${s.titleKoUnverified ? " · 한국어 제목은 임시 번역" : ""}
+              ${s.title}${s.titleKoUnverified ? " (한국어 제목은 임시 번역)" : ""}
             </p>`
           : nothing
       }
       <p class="meta">
         ${[s.producer.join(", "), vocalShort(s, 8), s.pub && `${fmt(s.pub)} 발표`]
           .filter(Boolean)
-          .join(" · ")}
+          .join(" - ")}
       </p>
       <p class="badges">${badgeText(s)}${kinds ? ` (${kinds})` : ""}</p>
       ${s.why ? html`<p class="why">${s.why}</p>` : nothing}
@@ -127,7 +127,7 @@ export function detail(s: Song, events: Map<string, EventInfo>) {
             : html`<li class="empty">아직 수집한 행사 셋리에는 나오지 않았어요.</li>`
         }
       </ol>
-      <p class="links">${links.map((a, i) => html`${i ? " · " : ""}${a}`)}</p>
+      <p class="links">${links.map((a, i) => html`${i ? ", " : ""}${a}`)}</p>
     </div>
   `;
 }
