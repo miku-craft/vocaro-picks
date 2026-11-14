@@ -139,5 +139,5 @@ Cloudflare Workers(정적 파일만)로 배포합니다. 저장소가 Cloudflare
 | 루트 디렉터리 | `/`                   |
 
 - 배포 설정은 `wrangler.jsonc`에 있습니다. `dist/`의 파일만 올라갑니다.
-- 커스텀 도메인(예: `vocaro.witch.work`)은 Cloudflare 대시보드의 Worker > Settings > Domains & Routes에서 추가하거나, `wrangler.jsonc`의 `routes` 주석을 풀어서 설정합니다.
+- 주소는 https://vocaro.witch.work 입니다. 도메인과 `workers.dev` 사용 여부는 `wrangler.jsonc`에서 관리합니다. 대시보드에서 바꾸면 다음 배포 때 `wrangler.jsonc` 값으로 돌아갑니다.
 - 로컬에서 직접 배포하려면 `npx wrangler login` 후 `npm run deploy`를 실행합니다.

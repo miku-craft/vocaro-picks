@@ -1,9 +1,13 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   // Cloudflare Workers 정적 사이트 (Worker 코드 없이 dist/ 파일만 배포)
+  // 도메인 설정은 대시보드가 아니라 이 파일을 기준으로 한다. 대시보드에서 바꾸면 다음 배포 때 이 파일 값으로 돌아간다.
   "name": "vocaro-picks",
   "compatibility_date": "2026-11-14",
   "assets": { "directory": "./dist" },
-  // 커스텀 도메인은 대시보드(Settings > Domains & Routes)에서 붙이거나 아래처럼 적는다
-  // "routes": [{ "pattern": "vocaro.witch.work", "custom_domain": true }]
+  "routes": [{ "pattern": "vocaro.witch.work", "custom_domain": true }],
+  // vocaro-picks.<계정>.workers.dev 주소는 끈다 (vocaro.witch.work 만 사용)
+  "workers_dev": false,
+  // 브랜치별 미리보기 주소(*-vocaro-picks.<계정>.workers.dev)는 켜 둔다
+  "preview_urls": true
 }
