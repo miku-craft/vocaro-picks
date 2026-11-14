@@ -8,6 +8,17 @@ const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySele
 const dlg = $<HTMLDialogElement>("#detail");
 const q = $<HTMLInputElement>("#q");
 const sort = $<HTMLSelectElement>("#sort");
+const autoplay = $<HTMLInputElement>("#autoplay");
+
+// 자동재생 설정은 이 브라우저에만 기억한다 (기본은 꺼짐)
+try {
+  autoplay.checked = localStorage.getItem("autoplay") === "1";
+} catch {}
+autoplay.addEventListener("change", () => {
+  try {
+    localStorage.setItem("autoplay", autoplay.checked ? "1" : "0");
+  } catch {}
+});
 const state = {
   songs: [] as Song[],
   sections: [] as Section[],
@@ -46,7 +57,7 @@ function selectSection(key: string | null) {
 }
 
 function openDetail(s: Song) {
-  render(detail(s, state.events), $("#detail-content"));
+  render(detail(s, state.events, autoplay.checked), $("#detail-content"));
   history.replaceState(null, "", `#song-${s.id}`);
   if (!dlg.open) dlg.showModal();
   dlg.scrollTop = 0;

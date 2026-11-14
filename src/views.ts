@@ -67,8 +67,8 @@ const useItem = (e: EventInfo | undefined, id: string, list: Use[]) => html`
   </li>
 `;
 
-export function detail(s: Song, events: Map<string, EventInfo>) {
-  const src = embedUrl(s);
+export function detail(s: Song, events: Map<string, EventInfo>, autoplay: boolean) {
+  const src = embedUrl(s, autoplay);
   const kinds = Object.entries(s.stats.byKind)
     .map(([k, n]) => `${KIND[k] ?? k} ${n}`)
     .join(", ");

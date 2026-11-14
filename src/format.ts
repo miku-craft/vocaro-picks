@@ -18,10 +18,12 @@ export const thumbUrl = (s: Song) => {
   return n ? `https://nicovideo.cdn.nimg.jp/thumbnails/${n}/${n}` : "";
 };
 
-export const embedUrl = (s: Song) =>
-  s.yt
-    ? `https://www.youtube-nocookie.com/embed/${s.yt}?autoplay=1`
-    : s.nico && `https://embed.nicovideo.jp/watch/${s.nico}?autoplay=1`;
+export const embedUrl = (s: Song, autoplay: boolean) => {
+  const q = `?autoplay=${autoplay ? 1 : 0}`;
+  return s.yt
+    ? `https://www.youtube-nocookie.com/embed/${s.yt}${q}`
+    : s.nico && `https://embed.nicovideo.jp/watch/${s.nico}${q}`;
+};
 
 // "初音ミク V4X (Dark)" → "初音ミク" 처럼 음원 버전을 떼고 캐릭터 이름만 남긴다
 const voiceName = (v: string) =>

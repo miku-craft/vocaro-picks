@@ -54,9 +54,22 @@ h1 {
   display: flex;
   gap: 8px;
 }
-.controls input {
+.controls input[type="search"] {
   flex: 1;
   min-width: 0;
+}
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.toggle input {
+  margin: 0;
+  accent-color: var(--accent);
 }
 input,
 select,
