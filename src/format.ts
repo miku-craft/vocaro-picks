@@ -27,7 +27,7 @@ export const embedUrl = (s: Song) =>
 const voiceName = (v: string) =>
   v
     .replace(/^(Synthesizer V( \d)?( AI)?|V\d|v)\s+/i, "")
-    .replace(/\s*[\(（].*$/, "")
+    .replace(/\s*[(（].*$/, "")
     .replace(/\s+(V\d+X?|V\d|NT|Append|AI|SV\d?|English|Natural|Lite)$/i, "")
     .replace(/(SV\d?|AI)$/, "")
     .trim();
