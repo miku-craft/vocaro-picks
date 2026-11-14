@@ -26,6 +26,21 @@ const state = {
   active: null as string | null, // 섹션 key (null = 전체)
 };
 
+// 섹션, 검색어, 정렬은 주소의 ?s=&q=&sort= 에 담아서 그대로 공유할 수 있게 한다
+const params = new URLSearchParams(location.search);
+state.active = params.get("s");
+q.value = params.get("q") ?? "";
+sort.value = params.get("sort") ?? "";
+
+function saveToUrl() {
+  const p = new URLSearchParams();
+  if (state.active) p.set("s", state.active);
+  if (q.value.trim()) p.set("q", q.value.trim());
+  if (sort.value) p.set("sort", sort.value);
+  const qs = p.toString();
+  history.replaceState(null, "", `${location.pathname}${qs ? `?${qs}` : ""}${location.hash}`);
+}
+
 const searchText = (s: Song) =>
   [s.title, s.titleKo, ...s.producer, ...s.vocal, ...s.tags].join(" ").toLowerCase();
 
@@ -49,6 +64,7 @@ function update() {
       : "조건에 맞는 곡이 없어요.",
     $("#list"),
   );
+  saveToUrl();
 }
 
 function selectSection(key: string | null) {
@@ -95,6 +111,8 @@ Promise.all([load<Song[]>("songs"), load<Section[]>("sections"), load<EventInfo[
       sections,
       events: new Map(events.map((e) => [e.id, e])),
     });
+    // 없는 섹션 key가 주소에 있으면 전체로
+    if (!sections.some((s) => s.key === state.active)) state.active = null;
     update();
     openFromHash();
     window.addEventListener("hashchange", openFromHash);
