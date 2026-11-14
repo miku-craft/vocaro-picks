@@ -1,4 +1,5 @@
 import { render, nothing } from "lit-html";
+import { repeat } from "lit-html/directives/repeat.js";
 import { matches, byKey } from "./rules.ts";
 import { card, sectionTabs, detail } from "./views.ts";
 import type { EventInfo, Section, Song } from "./types.ts";
@@ -27,7 +28,14 @@ function update() {
   render(sectionTabs(state.sections, state.active, selectSection), $("#sections"));
   $("#section-desc").textContent = `${section ? `${section.desc} ·` : "전체"} ${shown.length}곡`;
   render(
-    shown.length ? shown.map((s) => card(s, openDetail)) : "조건에 맞는 곡이 없어요.",
+    // 곡 id를 키로 카드 DOM을 재사용해서, 검색·정렬이 바뀌어도 썸네일이 다시 로드되지 않게 한다
+    shown.length
+      ? repeat(
+          shown,
+          (s) => s.id,
+          (s) => card(s, openDetail),
+        )
+      : "조건에 맞는 곡이 없어요.",
     $("#list"),
   );
 }
