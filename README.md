@@ -38,7 +38,7 @@ Node.js 22.18 이상이 필요합니다. (`scripts/build-data.ts`를 Node가 바
 npm install
 npm run dev       # 개발 서버 (저장하면 바로 반영)
 npm run build     # dist/ 에 배포용 파일 생성
-npm run preview   # dist/ 를 배포와 같은 형태로 확인
+npm start         # dist/ 를 배포와 같은 형태로 확인
 npm run typecheck # TypeScript 타입 검사 (build 때도 실행)
 npm run lint      # oxlint로 코드 검사
 npm run format    # oxfmt로 코드 정리
