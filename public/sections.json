@@ -1,8 +1,8 @@
 [
   {
     "key": "pick",
-    "title": "에디터 픽",
-    "desc": "직접 고른 곡",
+    "title": "노점상",
+    "desc": "한번 드셔보세요",
     "where": { "tags": "pick" },
     "sort": "-pub"
   },

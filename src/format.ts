@@ -42,7 +42,7 @@ export const vocalShort = (s: Song, max = 3) => {
 
 export const badgeText = (s: Song) =>
   [
-    isPick(s) && "★ 에디터 픽",
+    isPick(s) && "★ 노점상",
     s.stats.events
       ? `행사 ${s.stats.events}곳, ${FLAG.KR} ${s.stats.kr}, ${FLAG.JP} ${s.stats.jp}`
       : "아직 수집한 셋리에는 없어요",

@@ -100,9 +100,9 @@ npm run data
 | `tags`              | 직접 붙이는 분류 key (예: `pick`). 빌드해도 유지                       |
 | `why`               | 추천 근거. 빌드해도 유지                                               |
 
-## 에디터 픽 넣기
+## 노점상 넣기
 
-`public/songs.json`에 곡을 하나 추가하고 `tags`에 `"pick"`을 넣으면 "에디터 픽" 섹션에 나옵니다. 추천 이유(`why`)는 비워 둬도 됩니다. 행사 기록이 없는 곡도 됩니다.
+`public/songs.json`에 곡을 하나 추가하고 `tags`에 `"pick"`을 넣으면 "노점상" 섹션에 나옵니다. 추천 이유(`why`)는 비워 둬도 됩니다. 행사 기록이 없는 곡도 됩니다.
 
 - `id`는 VocaDB 곡 ID입니다. YouTube 영상 ID로 `https://vocadb.net/api/songs/byPv?pvService=Youtube&pvId=영상ID`를 열면 찾을 수 있습니다.
 - 행사 기록이 없으면 `stats`는 `{ "events": 0, "kr": 0, "jp": 0, "byKind": {} }`, `uses`는 `[]`로 둡니다.
@@ -115,8 +115,8 @@ npm run data
 ```json
 {
   "key": "pick",
-  "title": "에디터 픽",
-  "desc": "직접 고른 곡",
+  "title": "노점상",
+  "desc": "한번 드셔보세요",
   "where": { "tags": "pick" },
   "sort": "-stats.events"
 }

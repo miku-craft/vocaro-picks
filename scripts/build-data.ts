@@ -174,7 +174,7 @@ const songs: Song[] = picked.map((t) => {
   };
 });
 
-// 집계 기준에는 안 들지만 직접 넣은 곡(tags 나 why 가 있는 곡)은 그대로 남긴다. 예: 에디터 픽
+// 집계 기준에는 안 들지만 직접 넣은 곡(tags 나 why 가 있는 곡)은 그대로 남긴다. 예: 노점상
 const built = new Set(songs.map((s) => s.id));
 const manual = prev.filter(
   (s) => typeof s.id === "number" && !built.has(s.id) && ((s.tags || []).length || s.why),
