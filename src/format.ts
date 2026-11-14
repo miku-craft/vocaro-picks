@@ -28,7 +28,7 @@ export const embedUrl = (s: Song, autoplay: boolean) => {
 // "初音ミク V4X (Dark)" → "初音ミク" 처럼 음원 버전을 떼고 캐릭터 이름만 남긴다
 const voiceName = (v: string) =>
   v
-    .replace(/^(Synthesizer V( \d)?( AI)?|V\d|v)\s+/i, "")
+    .replace(/^(Synthesizer V( \d)?( AI)?|AI|V\d|v)\s+/i, "")
     .replace(/\s*[(（].*$/, "")
     .replace(/\s+(V\d+X?|V\d|NT|Append|AI|SV\d?|English|Natural|Lite)$/i, "")
     .replace(/(SV\d?|AI)$/, "")

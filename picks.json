@@ -37,5 +37,77 @@
     "vocal": ["初音ミク"],
     "pub": "2024-10-08",
     "yt": "Y1mYYShiLhg"
+  },
+  {
+    "id": 781037,
+    "title": "ネバーエンド・ワンダーランド",
+    "titleKo": "네버엔드 원더랜드",
+    "titleKoUnverified": true,
+    "producer": ["ヤマギシコージ"],
+    "vocal": ["初音ミク"],
+    "pub": "2025-04-26",
+    "yt": "rccZP0nSAS0",
+    "nico": "sm45323754"
+  },
+  {
+    "id": 972812,
+    "title": "フレンドカウンセリング",
+    "titleKo": "프렌드 카운슬링",
+    "producer": ["句るり"],
+    "vocal": ["初音ミク", "重音テト"],
+    "pub": "2026-05-17",
+    "yt": "_ZyDkp9LfuU",
+    "nico": "sm46309429"
+  },
+  {
+    "id": 1054797,
+    "title": "僕らはきっと、加速している",
+    "titleKo": "우리는 분명, 가속하고 있어",
+    "titleKoUnverified": true,
+    "producer": ["adomiori"],
+    "vocal": ["Synthesizer V AI 音街ウナ"],
+    "pub": "2026-10-30",
+    "yt": "CRl-8fQ3SQk"
+  },
+  {
+    "id": 1021627,
+    "title": "ツァイトガイスト",
+    "titleKo": "차이트가이스트",
+    "titleKoUnverified": true,
+    "producer": ["奏"],
+    "vocal": ["星尘Infinity"],
+    "pub": "2026-08-22",
+    "yt": "x7gvlVUw_2U",
+    "nico": "sm46691036"
+  },
+  {
+    "id": 999225,
+    "title": "rollback/Q",
+    "producer": ["ariiol"],
+    "vocal": ["AI ナースロボ＿タイプＴ"],
+    "pub": "2026-07-10",
+    "yt": "VCHpGKran5g",
+    "nico": "sm46708557"
+  },
+  {
+    "id": 830250,
+    "title": "モニタリング. ariiol remix [full]",
+    "titleKo": "모니터링. ariiol remix [full]",
+    "producer": ["ariiol"],
+    "vocal": ["初音ミク"],
+    "pub": "2025-08-23",
+    "yt": "H7ouXbE1Znc",
+    "nico": "sm45326394"
+  },
+  {
+    "id": 871795,
+    "title": "メタフィクション☆ショー",
+    "titleKo": "메타픽션☆쇼",
+    "titleKoUnverified": true,
+    "producer": ["LonePi", "BCNO"],
+    "vocal": ["初音ミク"],
+    "pub": "2025-11-21",
+    "yt": "6ZxPJ-si0OA",
+    "nico": "so45515630"
   }
 ]
