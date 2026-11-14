@@ -1,7 +1,7 @@
 // 화면에 보여 줄 문자열과 URL 만들기
-import type { Country, EventInfo, Song } from "./types.ts";
+import type { Country, EventInfo, Kind, Song } from "./types.ts";
 
-export const KIND: Record<string, string> = {
+export const KIND: Record<Kind, string> = {
   랜플댄: "랜덤플레이댄스",
   DJ: "DJ",
   공연: "공연",

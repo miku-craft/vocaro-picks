@@ -6,7 +6,8 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { EventInfo, Song } from "../src/types.ts";
+import { KIND } from "../src/format.ts";
+import type { EventInfo, Kind, Song } from "../src/types.ts";
 
 // research/ 입력 파일 모양 (쓰는 필드만)
 interface RawEvent {
@@ -73,6 +74,11 @@ const readJson = async <T>(p: string, fallback: T): Promise<T> => {
   }
 };
 const isDate = (d: string | null | undefined) => /^\d{4}-\d{2}-\d{2}$/.test(d || "");
+// 조사 데이터의 kind 가 화면에서 아는 종류인지 확인한다. 새 종류면 format.ts 의 KIND 에 먼저 추가
+const toKind = (k: string): Kind => {
+  if (!Object.hasOwn(KIND, k)) throw new Error(`알 수 없는 kind: ${k}`);
+  return k as Kind;
+};
 
 // ---------- events.json ----------
 const rawDir = R("research", "raw");
@@ -121,7 +127,7 @@ let i = 0;
 await Promise.all(
   Array.from({ length: 6 }, async () => {
     while (i < need.length) {
-      const t = need[i++];
+      const t = need[i++]!; // 바로 위 while 조건이 범위를 보장
       try {
         const r = await fetch(`https://vocadb.net/api/songs/${t.vocadbId}?fields=PVs`);
         if (!r.ok) continue;
@@ -144,9 +150,9 @@ const keep = new Map(prev.filter((s) => typeof s.id === "number").map((s) => [s.
 
 const songs: Song[] = picked.map((t) => {
   const uses = t.used.filter((u) => !u.self);
-  const byKind: Record<string, number> = {};
+  const byKind: Song["stats"]["byKind"] = {};
   for (const kind of new Set(uses.map((u) => u.kind))) {
-    byKind[kind] = new Set(uses.filter((u) => u.kind === kind).map((u) => u.eventId)).size;
+    byKind[toKind(kind)] = new Set(uses.filter((u) => u.kind === kind).map((u) => u.eventId)).size;
   }
   const old: Partial<Song> = keep.get(t.vocadbId) || {};
   const pv = pvCache[t.vocadbId] ?? { yt: null, nico: null };
@@ -165,7 +171,7 @@ const songs: Song[] = picked.map((t) => {
       ev: u.eventId,
       session: u.session,
       date: isDate(u.date) ? u.date : null,
-      kind: u.kind,
+      kind: toKind(u.kind),
       src: u.source,
       ...(u.self ? { self: true as const } : {}),
     })),

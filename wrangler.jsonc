@@ -9,5 +9,5 @@
   // vocaro-picks.<계정>.workers.dev 주소는 끈다 (vocaro.witch.work 만 사용)
   "workers_dev": false,
   // 브랜치별 미리보기 주소(*-vocaro-picks.<계정>.workers.dev)는 켜 둔다
-  "preview_urls": true
+  "preview_urls": true,
 }

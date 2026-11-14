@@ -12,7 +12,7 @@ import {
   fmt,
   eventDate,
 } from "./format.ts";
-import type { EventInfo, Section, Song, Use } from "./types.ts";
+import type { EventInfo, Kind, Section, Song, Use } from "./types.ts";
 
 const extLink = (href: string, text: string) =>
   html`<a href=${href} target="_blank" rel="noopener">${text} ↗</a>`;
@@ -59,7 +59,7 @@ const useItem = (e: EventInfo | undefined, id: string, list: Use[]) => html`
       ${list.map(
         (u) =>
           html`<li>
-            ${KIND[u.kind] ?? u.kind} - ${u.session}${u.self ? " (DJ 본인 곡)" : ""}
+            ${KIND[u.kind]} - ${u.session}${u.self ? " (DJ 본인 곡)" : ""}
             ${u.src ? extLink(u.src, "출처") : nothing}
           </li>`,
       )}
@@ -69,8 +69,9 @@ const useItem = (e: EventInfo | undefined, id: string, list: Use[]) => html`
 
 export function detail(s: Song, events: Map<string, EventInfo>, autoplay: boolean) {
   const src = embedUrl(s, autoplay);
-  const kinds = Object.entries(s.stats.byKind)
-    .map(([k, n]) => `${KIND[k] ?? k} ${n}`)
+  const kinds = (Object.keys(KIND) as Kind[])
+    .filter((k) => s.stats.byKind[k])
+    .map((k) => `${KIND[k]} ${s.stats.byKind[k]}`)
     .join(", ");
   const tags = s.tags.filter((t) => t !== "pick");
   // 행사별로 묶어서 최근 행사부터

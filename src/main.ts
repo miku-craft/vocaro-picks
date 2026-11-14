@@ -1,8 +1,9 @@
 import { render, nothing } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
 import { matches, byKey } from "./rules.ts";
+import { SECTIONS } from "./sections.ts";
 import { card, sectionTabs, detail } from "./views.ts";
-import type { EventInfo, Section, Song } from "./types.ts";
+import type { EventInfo, SortKey, Song } from "./types.ts";
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector<T>(s)!;
 const dlg = $<HTMLDialogElement>("#detail");
@@ -21,15 +22,16 @@ autoplay.addEventListener("change", () => {
 });
 const state = {
   songs: [] as Song[],
-  sections: [] as Section[],
   events: new Map<string, EventInfo>(),
   active: null as string | null, // 섹션 key (null = 전체)
 };
 
 // 섹션, 검색어, 정렬은 주소의 ?s=&q=&sort= 에 담아서 그대로 공유할 수 있게 한다
 const params = new URLSearchParams(location.search);
-state.active = params.get("s");
+// 없는 섹션 key면 전체로
+state.active = SECTIONS.some((s) => s.key === params.get("s")) ? params.get("s") : null;
 q.value = params.get("q") ?? "";
+// <select>는 목록에 없는 값을 넣으면 "" 가 되므로 sort.value 는 항상 옵션 값 중 하나다
 sort.value = params.get("sort") ?? "";
 
 function saveToUrl() {
@@ -46,12 +48,12 @@ const searchText = (s: Song) =>
 
 function update() {
   const query = q.value.trim().toLowerCase();
-  const section = state.sections.find((s) => s.key === state.active);
+  const section = SECTIONS.find((s) => s.key === state.active);
   const shown = state.songs
     .filter((s) => (!section || matches(s, section.where)) && searchText(s).includes(query))
-    .sort(byKey(sort.value || section?.sort || "-stats.events"));
+    .sort(byKey((sort.value as SortKey | "") || section?.sort || "-stats.events"));
 
-  render(sectionTabs(state.sections, state.active, selectSection), $("#sections"));
+  render(sectionTabs(SECTIONS, state.active, selectSection), $("#sections"));
   $("#section-desc").textContent = `${section ? `${section.desc} -` : "전체"} ${shown.length}곡`;
   render(
     // 곡 id를 키로 카드 DOM을 재사용해서, 검색이나 정렬이 바뀌어도 썸네일이 다시 로드되지 않게 한다
@@ -104,15 +106,10 @@ const load = <T>(name: string): Promise<T> =>
     return r.json();
   });
 
-Promise.all([load<Song[]>("songs"), load<Section[]>("sections"), load<EventInfo[]>("events")])
-  .then(([songs, sections, events]) => {
-    Object.assign(state, {
-      songs,
-      sections,
-      events: new Map(events.map((e) => [e.id, e])),
-    });
-    // 없는 섹션 key가 주소에 있으면 전체로
-    if (!sections.some((s) => s.key === state.active)) state.active = null;
+Promise.all([load<Song[]>("songs"), load<EventInfo[]>("events")])
+  .then(([songs, events]) => {
+    state.songs = songs;
+    state.events = new Map(events.map((e) => [e.id, e]));
     update();
     openFromHash();
     window.addEventListener("hashchange", openFromHash);

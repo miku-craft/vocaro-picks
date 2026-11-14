@@ -1,0 +1,54 @@
+// 섹션 정의. 버튼 순서는 배열 순서와 같고 "전체"는 항상 맨 앞에 붙는다.
+import type { Section } from "./types.ts";
+
+export const SECTIONS = [
+  {
+    key: "pick",
+    title: "노점상",
+    desc: "한번 드셔보세요",
+    where: { tags: "pick" },
+    sort: "-pub",
+  },
+  {
+    key: "new",
+    title: "요즘 신곡",
+    desc: "최근 1년 안에 나온 곡",
+    where: { pub: ">=@1y" },
+    sort: "-stats.events",
+  },
+  {
+    key: "randplay",
+    title: "랜플댄 단골",
+    desc: "랜덤플레이댄스 5곳 이상",
+    where: { "stats.byKind.랜플댄": ">=5" },
+    sort: "-stats.byKind.랜플댄",
+  },
+  {
+    key: "both",
+    title: "한일 양쪽에서 쓰인 곡",
+    desc: "한국과 일본 행사 모두에서 쓰인 곡",
+    where: { "stats.kr": ">=1", "stats.jp": ">=1" },
+    sort: "-stats.events",
+  },
+  {
+    key: "club",
+    title: "클럽 DJ 단골",
+    desc: "DJ 셋 5곳 이상",
+    where: { "stats.byKind.DJ": ">=5" },
+    sort: "-stats.byKind.DJ",
+  },
+  {
+    key: "kr",
+    title: "한국 행사 인기곡",
+    desc: "한국 행사 4곳 이상",
+    where: { "stats.kr": ">=4" },
+    sort: "-stats.kr",
+  },
+  {
+    key: "jp",
+    title: "일본 현장 인기곡",
+    desc: "일본 행사 4곳 이상",
+    where: { "stats.jp": ">=4" },
+    sort: "-stats.jp",
+  },
+] satisfies Section[];
