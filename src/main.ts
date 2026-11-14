@@ -1,10 +1,9 @@
 import { render, nothing } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
-import { matches, byKey } from "./rules.ts";
-import { SECTIONS } from "./sections.ts";
+import { DEFAULT_SORT, SECTIONS, SORTS } from "./sections.ts";
 import { withPicks } from "./picks.ts";
 import { card, sectionTabs, detail, playlist } from "./views.ts";
-import type { EventInfo, SongData, SortKey, Song } from "./types.ts";
+import type { EventInfo, SongData, Song } from "./types.ts";
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector<T>(s)!;
 const dlg = $<HTMLDialogElement>("#detail");
@@ -52,8 +51,8 @@ function update() {
   const query = q.value.trim().toLowerCase();
   const section = SECTIONS.find((s) => s.key === state.active);
   const shown = state.songs
-    .filter((s) => (!section || matches(s, section.where)) && searchText(s).includes(query))
-    .sort(byKey((sort.value as SortKey | "") || section?.sort || "-stats.events"));
+    .filter((s) => (!section || section.filter(s)) && searchText(s).includes(query))
+    .sort(SORTS[sort.value] ?? section?.sort ?? DEFAULT_SORT);
   state.shown = shown;
 
   render(sectionTabs(SECTIONS, state.active, selectSection), $("#sections"));

@@ -6,6 +6,7 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
+import pMap from "p-map";
 import { KIND } from "../src/format.ts";
 import type { EventInfo, Kind, PickEntry, SongData } from "../src/types.ts";
 
@@ -134,24 +135,21 @@ const pickPv = (pvs: VocaDbPv[], service: string) => {
   );
 };
 const need = picked.filter((t) => !(t.vocadbId in pvCache));
-let i = 0;
-await Promise.all(
-  Array.from({ length: 6 }, async () => {
-    while (i < need.length) {
-      const t = need[i++]!; // 바로 위 while 조건이 범위를 보장
-      try {
-        const r = await fetch(`https://vocadb.net/api/songs/${t.vocadbId}?fields=PVs`);
-        if (!r.ok) continue;
-        const j: { pvs?: VocaDbPv[] } = await r.json();
-        pvCache[t.vocadbId] = {
-          yt: pickPv(j.pvs || [], "Youtube"),
-          nico: pickPv(j.pvs || [], "NicoNicoDouga"),
-        };
-      } catch {
-        /* 다음 실행 때 다시 시도 */
-      }
-    }
-  }),
+// VocaDB 에 6개씩 동시에 묻는다. 실패한 곡은 캐시에 안 남으니 다음 실행 때 다시 시도한다
+await pMap(
+  need,
+  async (t) => {
+    try {
+      const r = await fetch(`https://vocadb.net/api/songs/${t.vocadbId}?fields=PVs`);
+      if (!r.ok) return;
+      const j: { pvs?: VocaDbPv[] } = await r.json();
+      pvCache[t.vocadbId] = {
+        yt: pickPv(j.pvs || [], "Youtube"),
+        nico: pickPv(j.pvs || [], "NicoNicoDouga"),
+      };
+    } catch {}
+  },
+  { concurrency: 6 },
 );
 await fs.writeFile(pvCachePath, JSON.stringify(pvCache));
 

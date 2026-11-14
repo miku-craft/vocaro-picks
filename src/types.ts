@@ -55,21 +55,13 @@ export interface EventInfo {
   to: string | null;
 }
 
-// 섹션 조건과 정렬에 쓸 수 있는 필드 (점으로 이은 경로)
-export type Field =
-  | "title"
-  | "pub"
-  | "tags"
-  | "stats.events"
-  | "stats.kr"
-  | "stats.jp"
-  | `stats.byKind.${Kind}`;
-export type SortKey = Field | `-${Field}`;
+// 곡 두 개를 비교하는 정렬 함수 (Array.prototype.sort 에 그대로 넘긴다)
+export type Compare = (a: Song, b: Song) => number;
 
 export interface Section {
   key: string;
   title: string;
   desc: string;
-  where: Partial<Record<Field, string>>;
-  sort?: SortKey;
+  filter: (s: Song) => boolean;
+  sort: Compare;
 }

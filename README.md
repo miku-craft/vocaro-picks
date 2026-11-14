@@ -16,13 +16,14 @@ vocaro-picks/
 │   ├── main.ts             데이터 불러오기, 검색, 섹션, 정렬, 상세 창 열고 닫기
 │   ├── views.ts            lit-html 템플릿 (카드, 섹션 버튼, 상세 창, 연속 재생)
 │   ├── format.ts           화면에 보일 문자열과 URL 만들기
-│   ├── rules.ts            섹션 where / sort 규칙 해석
-│   ├── sections.ts         섹션 정의 (요즘 신곡, 한일 양쪽, 랜플댄 단골 등)
+│   ├── sections.ts         섹션 정의와 정렬 방법 (요즘 신곡, 랜플댄 단골 등)
 │   ├── picks.ts            picks.json 을 곡 목록에 합치기
 │   └── types.ts            데이터 타입 (Song, EventInfo, Section)
 ├── public/
 │   ├── songs.json          곡 데이터
 │   └── events.json         행사 데이터 (곡 상세의 "쓰인 행사"에 사용)
+├── .github/workflows/
+│   └── check.yml           PR, main 푸시마다 린트와 빌드(타입 검사 포함)
 ├── scripts/
 │   └── build-data.ts       research/ 조사 결과로 public/songs.json, events.json 생성
 ├── picks.json              노점상 추천 곡 (PR은 여기에)
@@ -129,26 +130,25 @@ npm run data
 | `why`               |      | 추천 이유 한 줄. 카드와 상세 창에 표시                                                                                |
 
 - 이미 집계에 있는 곡이면 행사 기록은 `songs.json` 것을 그대로 쓰고, 노점상 표시와 `why`만 붙습니다.
-- `npm run typecheck`로 필드 이름과 타입을 확인할 수 있습니다.
+- `npm run typecheck`로 필드 이름과 타입을 확인할 수 있습니다. PR을 보내면 GitHub Actions가 같은 검사를 자동으로 돌립니다.
 
 ## 섹션 추가하기
 
-`src/sections.ts`의 `SECTIONS`에 항목을 추가하면 섹션 버튼이 생깁니다. 버튼 순서는 배열 순서와 같고, "전체"는 항상 맨 앞에 붙습니다. `where`의 모든 조건을 만족하는 곡만 보여 줍니다.
+`src/sections.ts`의 `SECTIONS`에 항목을 추가하면 섹션 버튼이 생깁니다. 버튼 순서는 배열 순서와 같고, "전체"는 항상 맨 앞에 붙습니다. `filter`가 `true`인 곡만 `sort` 순서로 보여 줍니다.
 
 ```ts
 {
-  key: "pick",
-  title: "노점상",
-  desc: "한번 드셔보세요",
-  where: { tags: "pick" },
-  sort: "-stats.events",
+  key: "randplay",
+  title: "랜플댄 단골",
+  desc: "랜덤플레이댄스 5곳 이상",
+  filter: (s) => (s.stats.byKind.랜플댄 ?? 0) >= 5,
+  sort: desc((s) => s.stats.byKind.랜플댄 ?? 0),
 }
 ```
 
-- 조건 값: `">=3"`, `"<=2"`, `">=2026-01-01"`, `">=@1y"`(오늘부터 1년 전), `"pick"`(같음. 배열 필드면 포함 여부)
-- 필드는 점으로 이어 씁니다: `stats.kr`, `stats.byKind.랜플댄`
-- `sort`: 필드 이름, 앞에 `-`를 붙이면 큰 값부터
-- 쓸 수 있는 필드는 `src/types.ts`의 `Field`에 있습니다. 필드 이름에 오타가 있으면 `npm run typecheck`에서 에러가 납니다.
+- `filter`, `sort`는 일반 함수입니다. 곡(`Song`)의 필드는 `src/types.ts`에 있습니다.
+- `desc(값)` / `asc(값)`: 그 값의 큰 순 / 작은 순. 같으면 행사 많은 순으로 한 번 더 정렬합니다.
+- 정렬 드롭다운의 항목은 같은 파일의 `SORTS`에 있고, key는 `index.html`의 `<option value>`와 같아야 합니다.
 
 곡을 누르면 상세 창이 열립니다. 영상은 상세 창을 열 때만 불러오고, 창을 닫으면 멈춥니다.
 
