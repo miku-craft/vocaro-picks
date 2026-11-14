@@ -72,6 +72,7 @@ const YT_FIX: Record<number, string> = {
   773190: "Ja9qmYjXk6U", // 太陽系デスコ
   871013: "R401j1QAvEg", // ディスペアダンス (YouTube 제목은 다름)
   389595: "lyMrKFS_qls", // ハジメテノオト(Shortバージョン) (YouTube 는 malo - Topic 음원)
+  588460: "y4Z_Yf8ut8Y", // 卑怯戦隊うろたんだー (수정판 재업로드, 영어 가사 자막)
 };
 
 const readJson = async <T>(p: string, fallback: T): Promise<T> => {
