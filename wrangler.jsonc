@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Cloudflare Workers 정적 사이트 (Worker 코드 없이 dist/ 파일만 배포)
+  "name": "vocaro-picks",
+  "compatibility_date": "2026-11-14",
+  "assets": { "directory": "./dist" },
+  // 커스텀 도메인은 대시보드(Settings > Domains & Routes)에서 붙이거나 아래처럼 적는다
+  // "routes": [{ "pattern": "vocaro.witch.work", "custom_domain": true }]
+}
