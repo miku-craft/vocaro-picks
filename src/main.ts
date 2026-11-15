@@ -15,7 +15,10 @@ const autoplay = $<HTMLInputElement>("#autoplay");
 // index.html 에 적힌 한국어 문구를 고른 언어로 바꾼다
 document.documentElement.lang = lang;
 document.title = t.siteTitle;
-$("h1").textContent = t.siteTitle;
+// 제목을 누르면 섹션, 검색어, 정렬, 열린 곡을 모두 비운 첫 화면으로 (고른 언어만 유지)
+const home = $<HTMLAnchorElement>("#home");
+home.textContent = t.siteTitle;
+home.href = location.pathname + (langParam ? `?lang=${lang}` : "");
 $(".lead").textContent = t.lead;
 q.placeholder = t.searchPlaceholder;
 q.ariaLabel = t.search;

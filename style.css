@@ -40,6 +40,10 @@ h1 {
   margin: 8px 0 4px;
   color: var(--accent);
 }
+h1 a {
+  color: inherit;
+  text-decoration: none;
+}
 .lang {
   float: right;
   margin-top: 8px;
