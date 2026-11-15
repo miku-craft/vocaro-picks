@@ -75,6 +75,35 @@ const YT_FIX: Record<number, string> = {
   588460: "y4Z_Yf8ut8Y", // 卑怯戦隊うろたんだー (수정판 재업로드, 영어 가사 자막)
 };
 
+// 일본 행사 이름의 한국어 표기 (한국어 화면에서 씀). 영어로만 된 이름은 그대로 둔다.
+const NAME_KO: Record<string, string> = {
+  B2: "소카대학 록 연구회 (인스타 @soka.rocken)",
+  J1: "니코니코 초회의 2026 「초 보카니코」",
+  J2: "하츠네 미쿠 「매지컬 미라이 2026」",
+  J10: "Unmute vol.1 Powered by 보카코레",
+  J11: "프로세카 커넥트 라이브 「Parallel Paaaarty!!!!」",
+  J12: "프로세카 커넥트 라이브 「GO Hoppin' Parade」",
+  J13: "EXCURSION Vol.3 (#エクスカ) - VocaGaku 원맨",
+  J14: "보카부키 정기 이벤트 (신주쿠 보카부키)",
+  J15: "VOCABUKI 2nd Anniversary DJ PARTY (보카부키 2주년)",
+  J17: "VOCALOID WEST vol.4 in Osaka (#ボカウエスト) 2026",
+  J18: "Vocaloid Standard Regulation VOL.8 (#ボカスタレ) × #ボカレトロ 콜라보 (주년 회차)",
+  J20: "Akiba39ers 7월 회차 (Vocaloid-20) × #僕プロ一周年 콜라보",
+  J21: "Vocaloid High 84th (#ボカハイ)",
+  J22: "VOCALOID Crossing 10th Anniv. × 도라문 요코초 (#どらクロ0801)",
+  J23: "나는 하츠네 미쿠로 간다 vol.08 (#俺ミク)",
+  J24: "VOCALOID FREAK VOL.165 (#ボカフリ)",
+  J25: "Vocaloid Assortment Vol.3 (#ボカソト)",
+  J26: "Vocaloid Standard Regulation VOL.9 (#ボカスタレ)",
+  J27: "Vocaloid Standard Regulation (#ボカスタレ) 2026-04-18 회차",
+  J28: "Vocaloid High 85th (#ボカハイ)",
+  J29: "Vocaloid High (#ボカハイ) 2026-05-24 회차",
+  J30: "VOCALOID FREAK VOL.164 (#ボカフリ)",
+  J31: "39 Connection!! Akiba Vol.24 (#39コネ)",
+  J32: "Voca/ad (#ボカアド) 제1회 · 가와사키 야외 보카쿠라",
+  J33: "아마도, 보카쿠라。 Vol.2 (#多分ボカクラ)",
+};
+
 const readJson = async <T>(p: string, fallback: T): Promise<T> => {
   try {
     return JSON.parse(await fs.readFile(p, "utf8"));
@@ -102,6 +131,7 @@ for (const f of rawFiles) {
   events.push({
     id: e.eventId,
     name: e.event,
+    ...(NAME_KO[e.eventId] && { nameKo: NAME_KO[e.eventId] }),
     country: e.country,
     from: dates[0] || null,
     to: dates.at(-1) || null,

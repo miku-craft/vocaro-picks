@@ -2,6 +2,7 @@
  {
   "id": "B2",
   "name": "創価大学ロック研究会 (인스타 @soka.rocken)",
+  "nameKo": "소카대학 록 연구회 (인스타 @soka.rocken)",
   "country": "JP",
   "from": "2026-04-12",
   "to": "2026-10-11"
@@ -9,6 +10,7 @@
  {
   "id": "J14",
   "name": "ボカブキ 정기 이벤트 (新宿 ボカブキ)",
+  "nameKo": "보카부키 정기 이벤트 (신주쿠 보카부키)",
   "country": "JP",
   "from": "2026-04-13",
   "to": "2026-10-10"
@@ -16,6 +18,7 @@
  {
   "id": "J27",
   "name": "Vocaloid Standard Regulation (#ボカスタレ) 2026-04-18 회차",
+  "nameKo": "Vocaloid Standard Regulation (#ボカスタレ) 2026-04-18 회차",
   "country": "JP",
   "from": "2026-04-18",
   "to": "2026-04-18"
@@ -37,6 +40,7 @@
  {
   "id": "J1",
   "name": "超ボカニコ2026",
+  "nameKo": "니코니코 초회의 2026 「초 보카니코」",
   "country": "JP",
   "from": "2026-04-25",
   "to": "2026-04-26"
@@ -86,6 +90,7 @@
  {
   "id": "J11",
   "name": "プロセカ コネクトライブ「Parallel Paaaarty!!!!」",
+  "nameKo": "프로세카 커넥트 라이브 「Parallel Paaaarty!!!!」",
   "country": "JP",
   "from": "2026-05-10",
   "to": "2026-05-10"
@@ -114,6 +119,7 @@
  {
   "id": "J29",
   "name": "Vocaloid High (#ボカハイ) 2026-05-24 회차",
+  "nameKo": "Vocaloid High (#ボカハイ) 2026-05-24 회차",
   "country": "JP",
   "from": "2026-05-24",
   "to": "2026-05-24"
@@ -128,6 +134,7 @@
  {
   "id": "J32",
   "name": "ボカアド (#ボカアド) 野外ボカロDJイベント 初開催",
+  "nameKo": "Voca/ad (#ボカアド) 제1회 · 가와사키 야외 보카쿠라",
   "country": "JP",
   "from": "2026-06-06",
   "to": "2026-06-06"
@@ -135,6 +142,7 @@
  {
   "id": "J33",
   "name": "多分、ボカクラ。 Vol.2 (#多分ボカクラ)",
+  "nameKo": "아마도, 보카쿠라。 Vol.2 (#多分ボカクラ)",
   "country": "JP",
   "from": "2026-06-07",
   "to": "2026-06-07"
@@ -142,6 +150,7 @@
  {
   "id": "J17",
   "name": "VOCALOID WEST vol.4 in Osaka (#ボカウエスト) 2026",
+  "nameKo": "VOCALOID WEST vol.4 in Osaka (#ボカウエスト) 2026",
   "country": "JP",
   "from": "2026-07-04",
   "to": "2026-07-04"
@@ -170,6 +179,7 @@
  {
   "id": "J18",
   "name": "Vocaloid Standard Regulation VOL.8 (#ボカスタレ) × #ボカレトロ コラボ回 (周年回)",
+  "nameKo": "Vocaloid Standard Regulation VOL.8 (#ボカスタレ) × #ボカレトロ 콜라보 (주년 회차)",
   "country": "JP",
   "from": "2026-07-18",
   "to": "2026-07-18"
@@ -205,6 +215,7 @@
  {
   "id": "J20",
   "name": "Akiba39ers 7月回 (Vocaloid-20) × #僕プロ一周年 コラボ",
+  "nameKo": "Akiba39ers 7월 회차 (Vocaloid-20) × #僕プロ一周年 콜라보",
   "country": "JP",
   "from": "2026-07-23",
   "to": "2026-07-23"
@@ -212,6 +223,7 @@
  {
   "id": "J2",
   "name": "初音ミク「マジカルミライ 2026」",
+  "nameKo": "하츠네 미쿠 「매지컬 미라이 2026」",
   "country": "JP",
   "from": "2026-07-24",
   "to": "2026-08-28"
@@ -219,6 +231,7 @@
  {
   "id": "J21",
   "name": "Vocaloid High 84th (#ボカハイ)",
+  "nameKo": "Vocaloid High 84th (#ボカハイ)",
   "country": "JP",
   "from": "2026-07-26",
   "to": "2026-07-26"
@@ -226,6 +239,7 @@
  {
   "id": "J22",
   "name": "VOCALOID Crossing 10th Anniv. × どらむん横丁 (#どらクロ0801)",
+  "nameKo": "VOCALOID Crossing 10th Anniv. × 도라문 요코초 (#どらクロ0801)",
   "country": "JP",
   "from": "2026-08-01",
   "to": "2026-08-01"
@@ -240,6 +254,7 @@
  {
   "id": "J10",
   "name": "Unmute vol.1 Powered by ボカコレ",
+  "nameKo": "Unmute vol.1 Powered by 보카코레",
   "country": "JP",
   "from": "2026-08-02",
   "to": "2026-08-02"
@@ -254,6 +269,7 @@
  {
   "id": "J23",
   "name": "俺は初音ミクで行く vol.08 (#俺ミク)",
+  "nameKo": "나는 하츠네 미쿠로 간다 vol.08 (#俺ミク)",
   "country": "JP",
   "from": "2026-08-09",
   "to": "2026-08-09"
@@ -310,6 +326,7 @@
  {
   "id": "J31",
   "name": "39 Connection!! Akiba Vol.24 (#39コネ)",
+  "nameKo": "39 Connection!! Akiba Vol.24 (#39コネ)",
   "country": "JP",
   "from": "2026-09-24",
   "to": "2026-09-24"
@@ -317,6 +334,7 @@
  {
   "id": "J15",
   "name": "VOCABUKI 2nd Anniversary DJ PARTY (ボカブキ 2周年)",
+  "nameKo": "VOCABUKI 2nd Anniversary DJ PARTY (보카부키 2주년)",
   "country": "JP",
   "from": "2026-09-26",
   "to": "2026-09-26"
@@ -324,6 +342,7 @@
  {
   "id": "J28",
   "name": "Vocaloid High 85th (#ボカハイ)",
+  "nameKo": "Vocaloid High 85th (#ボカハイ)",
   "country": "JP",
   "from": "2026-09-27",
   "to": "2026-09-27"
@@ -338,6 +357,7 @@
  {
   "id": "J13",
   "name": "EXCURSION Vol.3 (#エクスカ) — VocaGaku ワンマン",
+  "nameKo": "EXCURSION Vol.3 (#エクスカ) - VocaGaku 원맨",
   "country": "JP",
   "from": "2026-10-03",
   "to": "2026-10-03"
@@ -345,6 +365,7 @@
  {
   "id": "J30",
   "name": "VOCALOID FREAK VOL.164 (#ボカフリ)",
+  "nameKo": "VOCALOID FREAK VOL.164 (#ボカフリ)",
   "country": "JP",
   "from": "2026-10-10",
   "to": "2026-10-10"
@@ -373,6 +394,7 @@
  {
   "id": "J26",
   "name": "Vocaloid Standard Regulation VOL.9 (#ボカスタレ)",
+  "nameKo": "Vocaloid Standard Regulation VOL.9 (#ボカスタレ)",
   "country": "JP",
   "from": "2026-10-17",
   "to": "2026-10-17"
@@ -380,6 +402,7 @@
  {
   "id": "J12",
   "name": "プロセカ コネクトライブ「GO Hoppin' Parade」",
+  "nameKo": "프로세카 커넥트 라이브 「GO Hoppin' Parade」",
   "country": "JP",
   "from": "2026-10-24",
   "to": "2026-10-25"
@@ -401,6 +424,7 @@
  {
   "id": "J24",
   "name": "VOCALOID FREAK VOL.165 (#ボカフリ)",
+  "nameKo": "VOCALOID FREAK VOL.165 (#ボカフリ)",
   "country": "JP",
   "from": "2026-11-14",
   "to": "2026-11-14"
@@ -408,6 +432,7 @@
  {
   "id": "J25",
   "name": "Vocaloid Assortment Vol.3 (#ボカソト)",
+  "nameKo": "Vocaloid Assortment Vol.3 (#ボカソト)",
   "country": "JP",
   "from": "2026-11-14",
   "to": "2026-11-14"

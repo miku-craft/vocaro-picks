@@ -52,6 +52,7 @@ export interface PickEntry {
 export interface EventInfo {
   id: string;
   name: string;
+  nameKo?: string; // 한국어 화면용 이름 (일본 행사만)
   country: Country;
   from: string | null;
   to: string | null;

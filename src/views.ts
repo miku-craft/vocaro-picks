@@ -12,6 +12,7 @@ import {
   badgeText,
   fmt,
   eventDate,
+  eventName,
 } from "./format.ts";
 import { KINDS, type EventInfo, type Section, type Song, type Use } from "./types.ts";
 
@@ -55,7 +56,7 @@ export const sectionTabs = (
 // 행사 하나: 제목 줄 + 그 행사에서 쓰인 세션 목록
 const useItem = (e: EventInfo | undefined, id: string, list: Use[]) => html`
   <li>
-    <div class="use-head">${e ? FLAG[e.country] : ""} ${eventDate(e)} ${e?.name ?? id}</div>
+    <div class="use-head">${e ? FLAG[e.country] : ""} ${eventDate(e)} ${e ? eventName(e) : id}</div>
     <ul>
       ${list.map(
         (u) =>

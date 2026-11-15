@@ -8,6 +8,7 @@ export const FLAG: Record<Country, string> = { KR: "🇰🇷", JP: "🇯🇵" };
 export const displayTitle = (s: Song) => (lang === "ko" && s.titleKo) || s.title;
 // 제목 아래 작게 보여 줄 원제 (한국어 제목을 보여 줄 때만)
 export const subTitle = (s: Song) => (displayTitle(s) !== s.title ? s.title : "");
+export const eventName = (e: EventInfo) => (lang === "ko" && e.nameKo) || e.name;
 export const isPick = (s: Song) => s.tags.includes("pick");
 
 export const thumbUrl = (s: Song) => {
