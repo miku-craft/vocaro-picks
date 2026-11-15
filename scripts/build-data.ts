@@ -101,6 +101,8 @@ const NAME_KO: Record<string, string> = {
   J30: "VOCALOID FREAK VOL.164 (#ボカフリ)",
   J31: "39 Connection!! Akiba Vol.24 (#39コネ)",
   J32: "Voca/ad (#ボカアド) 제1회 · 가와사키 야외 보카쿠라",
+  J34: "Voca/ad (#ボカアド) 제2회 · 가와사키 야외 보카쿠라",
+  J35: "Voca/ad (#ボカアド) 제3회 · 가와사키 야외 보카쿠라",
   J33: "아마도, 보카쿠라。 Vol.2 (#多分ボカクラ)",
 };
 
