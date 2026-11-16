@@ -22,7 +22,6 @@ const ko = {
   all: "전체",
   count: (n: number) => `${n}곡`,
   noMatch: "조건에 맞는 곡이 없어요.",
-  loadError: "데이터를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.",
   kind: { 랜플댄: "랜덤플레이댄스", DJ: "DJ", 공연: "공연", 커버: "밴드 커버" } as Record<
     Kind,
     string
@@ -73,7 +72,6 @@ const ja: typeof ko = {
   all: "すべて",
   count: (n) => `${n}曲`,
   noMatch: "条件に合う曲がありません。",
-  loadError: "データを読み込めませんでした。しばらくしてからもう一度お試しください。",
   kind: { 랜플댄: "ランダムプレイダンス", DJ: "DJ", 공연: "ライブ", 커버: "バンドカバー" },
   pickBadge: "★ 屋台",
   eventsBadge: (n, kr, jp) => `イベント${n}件、🇰🇷 ${kr}、🇯🇵 ${jp}`,

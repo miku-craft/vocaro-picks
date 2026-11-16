@@ -1,4 +1,4 @@
-// public/*.json 과 섹션 정의의 모양. JSON은 scripts/build-data.ts 가 만들고 화면이 읽는다.
+// data/*.json 과 섹션 정의의 모양. JSON은 scripts/build-data.ts 가 만들고 화면이 읽는다.
 
 export type Country = "KR" | "JP";
 // 쓰인 방식. 순서는 상세 창에 표시하는 순서
@@ -14,7 +14,7 @@ export interface Use {
   self?: true; // DJ 본인 곡
 }
 
-// public/songs.json 의 곡 하나
+// data/songs.json 의 곡 하나
 export interface SongData {
   id: number; // VocaDB id
   title: string;

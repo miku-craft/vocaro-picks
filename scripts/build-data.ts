@@ -1,4 +1,4 @@
-// research/ 의 조사 결과로 public/songs.json, public/events.json 을 만든다.
+// research/ 의 조사 결과로 data/songs.json, data/events.json 을 만든다.
 // 실행: npm run data  (node scripts/build-data.ts, Node 22.18+ 의 타입 제거 실행)
 // - 페이지에 올리는 곡: 서로 다른 행사 3곳 이상 + 2곳에서 쓰인 최근 1년 신곡
 // - 노점상(picks.json)에 있는 곡은 기준에 못 미쳐도 집계에 있으면 행사 기록과 함께 올린다.
@@ -220,8 +220,8 @@ const evOrder = (a: string, b: string) => a.localeCompare(b, "en", { numeric: tr
 songs.sort((a, b) => a.id - b.id);
 for (const s of songs) s.uses.sort((a, b) => evOrder(a.ev, b.ev));
 
-await fs.writeFile(R("public", "events.json"), JSON.stringify(events, null, 1) + "\n");
-await fs.writeFile(R("public", "songs.json"), JSON.stringify(songs, null, 1) + "\n");
+await fs.writeFile(R("data", "events.json"), JSON.stringify(events, null, 1) + "\n");
+await fs.writeFile(R("data", "songs.json"), JSON.stringify(songs, null, 1) + "\n");
 
 const noVideo = songs.filter((s) => !s.yt && !s.nico).length;
 console.log(`곡 ${songs.length}개 (신곡 기준일 ${NEW_SINCE}), 행사 ${events.length}개`);

@@ -20,14 +20,16 @@ vocaro-picks/
 │   ├── sections.ts         섹션 정의와 정렬 방법 (요즘 신곡, 랜플댄 단골 등)
 │   ├── picks.ts            picks.json 을 곡 목록에 합치기
 │   └── types.ts            데이터 타입 (Song, EventInfo, Section)
-├── public/
-│   ├── songs.json          곡 데이터
+├── data/
+│   ├── songs.json          곡 데이터 (JS 번들에 같이 들어감)
 │   └── events.json         행사 데이터 (곡 상세의 "쓰인 행사"에 사용)
+├── public/
+│   └── _headers            Cloudflare 캐시 헤더 (/assets/* 는 1년 캐시)
 ├── .github/workflows/
 │   └── check.yml           PR, main 푸시마다 린트와 빌드(타입 검사 포함)
 ├── scripts/
 │   ├── merge-events.mjs    research/raw 의 새 셋리를 VocaDB와 맞춰 research/tally.json 에 합치기
-│   └── build-data.ts       research/ 조사 결과로 public/songs.json, events.json 생성
+│   └── build-data.ts       research/ 조사 결과로 data/songs.json, events.json 생성
 ├── picks.json              노점상 추천 곡 (PR은 여기에)
 ├── wrangler.jsonc          Cloudflare Workers 배포 설정
 └── research/               행사 셋리 조사 자료 (커밋하지 않음)
@@ -53,11 +55,11 @@ npm run format    # oxfmt로 코드 정리
 
 ## 곡 데이터
 
-`public/songs.json`과 `public/events.json`은 `research/`의 조사 결과로 만듭니다. `research/`는 커밋하지 않으므로 로컬에서 만든 뒤 `public/`의 JSON을 커밋합니다.
+`data/songs.json`과 `data/events.json`은 `research/`의 조사 결과로 만듭니다. `research/`는 커밋하지 않으므로 로컬에서 만든 뒤 `data/`의 JSON을 커밋합니다.
 
 ```bash
 npm run merge -- J34 J35   # 새로 모은 행사 셋리를 research/tally.json 에 합치기
-npm run data                # research/ 로 public/songs.json, events.json 만들기
+npm run data                # research/ 로 data/songs.json, events.json 만들기
 ```
 
 - 서로 다른 행사 3곳 이상에서 쓰인 곡과, 2곳에서 쓰인 최근 1년 신곡을 올립니다.
@@ -173,5 +175,6 @@ Cloudflare Workers(정적 파일만)로 배포합니다. 저장소가 Cloudflare
 | 루트 디렉터리 | `/`                   |
 
 - 배포 설정은 `wrangler.jsonc`에 있습니다. `dist/`의 파일만 올라갑니다.
+- 캐시: 곡 데이터는 JS 번들에 들어가서 내용이 바뀌면 파일 이름(해시)이 바뀝니다. 그래서 `public/_headers`로 `/assets/*`는 1년 동안 캐시하고, `index.html`은 매번 새로 확인해서 배포하면 바로 반영됩니다.
 - 주소는 https://vocaro.witch.work 입니다. 도메인과 `workers.dev` 사용 여부는 `wrangler.jsonc`에서 관리합니다. 대시보드에서 바꾸면 다음 배포 때 `wrangler.jsonc` 값으로 돌아갑니다.
 - 로컬에서 직접 배포하려면 `npx wrangler login` 후 `npm run deploy`를 실행합니다.

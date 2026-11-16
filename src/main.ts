@@ -5,6 +5,8 @@ import { DEFAULT_SORT, SECTIONS, SORTS } from "./sections.ts";
 import { withPicks } from "./picks.ts";
 import { card, sectionTabs, sortOptions, detail, playlist } from "./views.ts";
 import type { EventInfo, SongData, Song } from "./types.ts";
+import songsData from "../data/songs.json";
+import eventsData from "../data/events.json";
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector<T>(s)!;
 const dlg = $<HTMLDialogElement>("#detail");
@@ -51,10 +53,11 @@ autoplay.addEventListener("change", () => {
     localStorage.setItem("autoplay", autoplay.checked ? "1" : "0");
   } catch {}
 });
+// 데이터는 JS 번들에 같이 들어간다 (내용이 바뀌면 파일 이름의 해시가 바뀌어서 오래 캐시해도 된다)
 const state = {
-  songs: [] as Song[],
+  songs: withPicks(songsData as SongData[]),
   shown: [] as Song[], // 지금 화면에 보이는 목록 (연속 재생에 사용)
-  events: new Map<string, EventInfo>(),
+  events: new Map((eventsData as EventInfo[]).map((e) => [e.id, e])),
   active: null as string | null, // 섹션 key (null = 전체)
 };
 
@@ -141,20 +144,6 @@ $("#play-all").addEventListener("click", () => {
 q.addEventListener("input", update);
 sort.addEventListener("change", update);
 
-const load = <T>(name: string): Promise<T> =>
-  fetch(`${import.meta.env.BASE_URL}${name}.json`).then((r) => {
-    if (!r.ok) throw new Error(name);
-    return r.json();
-  });
-
-Promise.all([load<SongData[]>("songs"), load<EventInfo[]>("events")])
-  .then(([songs, events]) => {
-    state.songs = withPicks(songs);
-    state.events = new Map(events.map((e) => [e.id, e]));
-    update();
-    openFromHash();
-    window.addEventListener("hashchange", openFromHash);
-  })
-  .catch(() => {
-    $("#list").textContent = t.loadError;
-  });
+update();
+openFromHash();
+window.addEventListener("hashchange", openFromHash);
