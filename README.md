@@ -24,7 +24,10 @@ vocaro-picks/
 │   ├── songs.json          곡 데이터 (JS 번들에 같이 들어감)
 │   └── events.json         행사 데이터 (곡 상세의 "쓰인 행사"에 사용)
 ├── public/
-│   └── _headers            Cloudflare 캐시 헤더 (/assets/* 는 1년 캐시)
+│   ├── _headers            Cloudflare 캐시 헤더 (/assets/* 는 1년 캐시)
+│   ├── og.jpg              링크 미리보기 이미지
+│   └── robots.txt, sitemap.xml
+├── vite.config.ts          빌드 때 곡 목록을 index.html 에 미리 넣기 (검색엔진용)
 ├── .github/workflows/
 │   └── check.yml           PR, main 푸시마다 린트와 빌드(타입 검사 포함)
 ├── scripts/

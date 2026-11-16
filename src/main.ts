@@ -144,6 +144,8 @@ $("#play-all").addEventListener("click", () => {
 q.addEventListener("input", update);
 sort.addEventListener("change", update);
 
+// 빌드 때 미리 넣어 둔 목록(vite.config.ts, 검색엔진용)을 지우고 lit-html 로 다시 그린다
+$("#list").replaceChildren();
 update();
 openFromHash();
 window.addEventListener("hashchange", openFromHash);
