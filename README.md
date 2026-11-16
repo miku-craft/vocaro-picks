@@ -26,6 +26,7 @@ vocaro-picks/
 ├── public/
 │   ├── _headers            Cloudflare 캐시 헤더 (/assets/* 는 1년 캐시)
 │   ├── og.jpg              링크 미리보기 이미지
+│   ├── favicon.ico, apple-touch-icon.png  사이트 아이콘
 │   └── robots.txt, sitemap.xml
 ├── vite.config.ts          빌드 때 곡 목록을 index.html 에 미리 넣기 (검색엔진용)
 ├── .github/workflows/
