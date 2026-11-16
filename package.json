@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "merge": "node scripts/merge-events.mjs",
     "data": "node scripts/build-data.ts",
     "format": "oxfmt",
     "deploy": "npm run build && wrangler deploy",

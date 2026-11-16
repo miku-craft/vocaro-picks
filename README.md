@@ -26,6 +26,7 @@ vocaro-picks/
 ├── .github/workflows/
 │   └── check.yml           PR, main 푸시마다 린트와 빌드(타입 검사 포함)
 ├── scripts/
+│   ├── merge-events.mjs    research/raw 의 새 셋리를 VocaDB와 맞춰 research/tally.json 에 합치기
 │   └── build-data.ts       research/ 조사 결과로 public/songs.json, events.json 생성
 ├── picks.json              노점상 추천 곡 (PR은 여기에)
 ├── wrangler.jsonc          Cloudflare Workers 배포 설정
@@ -55,7 +56,8 @@ npm run format    # oxfmt로 코드 정리
 `public/songs.json`과 `public/events.json`은 `research/`의 조사 결과로 만듭니다. `research/`는 커밋하지 않으므로 로컬에서 만든 뒤 `public/`의 JSON을 커밋합니다.
 
 ```bash
-npm run data
+npm run merge -- J34 J35   # 새로 모은 행사 셋리를 research/tally.json 에 합치기
+npm run data                # research/ 로 public/songs.json, events.json 만들기
 ```
 
 - 서로 다른 행사 3곳 이상에서 쓰인 곡과, 2곳에서 쓰인 최근 1년 신곡을 올립니다.
@@ -149,7 +151,7 @@ npm run data
 
 - `filter`, `sort`는 일반 함수입니다. 곡(`Song`)의 필드는 `src/types.ts`에 있습니다.
 - `desc(값)` / `asc(값)`: 그 값의 큰 순 / 작은 순. 같으면 행사 많은 순으로 한 번 더 정렬합니다.
-- 정렬 드롭다운의 항목은 같은 파일의 `SORTS`에 있고, key는 `index.html`의 `<option value>`와 같아야 합니다.
+- 정렬 드롭다운의 항목은 같은 파일의 `SORTS`에 있습니다. 항목을 추가하면 드롭다운 옵션도 같이 생깁니다. 문구는 `src/i18n.ts`에 넣습니다.
 
 곡을 누르면 상세 창이 열립니다. 영상은 상세 창을 열 때만 불러오고, 창을 닫으면 멈춥니다.
 

@@ -26,12 +26,12 @@ const oneYearAgo = () => {
   return d.toLocaleDateString("sv-SE"); // YYYY-MM-DD (로컬 날짜)
 };
 
-// 정렬 드롭다운. key 는 index.html 의 <option value> 이자 주소의 ?sort= 값
-export const SORTS: Record<string, Compare> = {
-  "-stats.events": byEvents,
-  "-pub": desc(pub),
-  title: asc((s) => s.title),
-};
+// 정렬 드롭다운. 이 순서대로 "기본" 다음에 옵션이 생긴다. key 는 주소의 ?sort= 값
+export const SORTS: { key: string; label: string; sort: Compare }[] = [
+  { key: "-stats.events", label: t.sortEvents, sort: byEvents },
+  { key: "-pub", label: t.sortNew, sort: desc(pub) },
+  { key: "title", label: t.sortTitle, sort: asc((s) => s.title) },
+];
 
 export const DEFAULT_SORT = byEvents;
 

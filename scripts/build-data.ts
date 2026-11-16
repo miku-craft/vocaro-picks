@@ -214,6 +214,12 @@ const songs: SongData[] = picked.map((t) => {
   };
 });
 
+// tally.json 순서(집계 결과에 따라 바뀜)를 따르지 않고 고정된 순서로 써서, 커밋 diff 에 실제 바뀐 곡만 보이게 한다.
+// uses 는 행사 ID 순 (같은 행사 안에서는 원래 순서 유지). 화면은 어차피 다시 정렬한다
+const evOrder = (a: string, b: string) => a.localeCompare(b, "en", { numeric: true });
+songs.sort((a, b) => a.id - b.id);
+for (const s of songs) s.uses.sort((a, b) => evOrder(a.ev, b.ev));
+
 await fs.writeFile(R("public", "events.json"), JSON.stringify(events, null, 1) + "\n");
 await fs.writeFile(R("public", "songs.json"), JSON.stringify(songs, null, 1) + "\n");
 

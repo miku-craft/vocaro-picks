@@ -53,6 +53,12 @@ export const sectionTabs = (
     `,
   );
 
+// 정렬 드롭다운 옵션. "기본"(값 "")은 섹션마다 정한 정렬을 쓴다
+export const sortOptions = (sorts: { key: string; label: string }[]) => html`
+  <option value="">${t.sortDefault}</option>
+  ${sorts.map((o) => html`<option value=${o.key}>${o.label}</option>`)}
+`;
+
 // 행사 하나: 제목 줄 + 그 행사에서 쓰인 세션 목록
 const useItem = (e: EventInfo | undefined, id: string, list: Use[]) => html`
   <li>

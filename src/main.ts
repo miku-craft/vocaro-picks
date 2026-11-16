@@ -3,7 +3,7 @@ import { repeat } from "lit-html/directives/repeat.js";
 import { lang, langParam, t } from "./i18n.ts";
 import { DEFAULT_SORT, SECTIONS, SORTS } from "./sections.ts";
 import { withPicks } from "./picks.ts";
-import { card, sectionTabs, detail, playlist } from "./views.ts";
+import { card, sectionTabs, sortOptions, detail, playlist } from "./views.ts";
 import type { EventInfo, SongData, Song } from "./types.ts";
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector<T>(s)!;
@@ -23,9 +23,7 @@ $(".lead").textContent = t.lead;
 q.placeholder = t.searchPlaceholder;
 q.ariaLabel = t.search;
 sort.ariaLabel = t.sort;
-[t.sortDefault, t.sortEvents, t.sortNew, t.sortTitle].forEach((text, i) => {
-  sort.options[i]!.text = text;
-});
+render(sortOptions(SORTS), sort);
 $("#autoplay-label").textContent = t.autoplay;
 $("#play-all").textContent = t.playAll;
 $("#sections").ariaLabel = t.sectionsNav;
@@ -86,7 +84,7 @@ function update() {
   const section = SECTIONS.find((s) => s.key === state.active);
   const shown = state.songs
     .filter((s) => (!section || section.filter(s)) && searchText(s).includes(query))
-    .sort(SORTS[sort.value] ?? section?.sort ?? DEFAULT_SORT);
+    .sort(SORTS.find((o) => o.key === sort.value)?.sort ?? section?.sort ?? DEFAULT_SORT);
   state.shown = shown;
 
   render(sectionTabs(SECTIONS, state.active, selectSection), $("#sections"));
