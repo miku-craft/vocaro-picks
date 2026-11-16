@@ -6,7 +6,12 @@ export type Lang = "ko" | "ja";
 
 const ko = {
   siteTitle: "보카로 트렌드",
-  lead: "한국과 일본 행사 셋리스트에 쓰인 보카로 곡. 행사에서 쓰기 좋은 곡 위주라서 유명하다고 다 있는 건 아니에요.",
+  // 브라우저 탭과 검색 결과에 보이는 제목. 사람들이 검색할 말(랜플댄, DJ, 셋리스트)을 넣는다
+  pageTitle: "보카로 트렌드 - 랜플댄·DJ 행사 셋리스트에 쓰인 보카로 곡",
+  lead: "한국과 일본 행사의 랜덤플레이댄스(랜플댄), DJ, 공연 셋리스트에 쓰인 보카로 곡을 모았어요. 행사에서 쓰기 좋은 곡 위주라서 유명하다고 다 있는 건 아니에요.",
+  description: (songs: number, events: number) =>
+    `랜덤플레이댄스(랜플댄), DJ, 공연 등 한국과 일본 행사 ${events}곳의 셋리스트에서 쓰인 보카로 곡 ${songs}곡. 요즘 신곡, 랜플댄 단골, 클럽 DJ 단골 곡을 섹션별로 모았어요.`,
+  stats: (events: number, until: string) => `행사 ${events}곳 셋리스트 기준 (${until}까지)`,
   otherLang: "日本語", // 다른 언어로 바꾸는 링크 글자
   search: "검색",
   searchPlaceholder: "제목, P, 보컬 검색",
@@ -56,7 +61,11 @@ const ko = {
 
 const ja: typeof ko = {
   siteTitle: "ボカロトレンド",
-  lead: "日韓のイベントのセットリストで使われたボカロ曲。イベントで使いやすい曲が中心なので、有名な曲でも載っていないことがあります。",
+  pageTitle: "ボカロトレンド - DJ・ランダムプレイダンスのセトリで使われたボカロ曲",
+  lead: "日韓のイベントのランダムプレイダンス、DJ、ライブのセットリストで使われたボカロ曲を集めました。イベントで使いやすい曲が中心なので、有名な曲でも載っていないことがあります。",
+  description: (songs, events) =>
+    `ランダムプレイダンス、DJ、ライブなど日韓のイベント${events}件のセットリストで使われたボカロ曲${songs}曲。最近の新曲、ランダムプレイダンスやクラブDJの常連曲をセクション別にまとめました。`,
+  stats: (events, until) => `イベント${events}件のセトリをもとに集計（${until}まで）`,
   otherLang: "한국어",
   search: "検索",
   searchPlaceholder: "曲名・P・ボーカルで検索",
@@ -102,11 +111,13 @@ const ja: typeof ko = {
 };
 
 // 언어: 주소의 ?lang= 가 있으면 그것, 없으면 브라우저 언어가 일본어일 때만 ja
-export const langParam = new URLSearchParams(location.search).get("lang");
+// 빌드 때(vite.config.ts, Node)는 location 이 없으므로 ko
+const inBrowser = typeof location !== "undefined";
+export const langParam = inBrowser ? new URLSearchParams(location.search).get("lang") : null;
 export const lang: Lang =
   langParam === "ja" || langParam === "ko"
     ? langParam
-    : navigator.language.startsWith("ja")
+    : inBrowser && navigator.language.startsWith("ja")
       ? "ja"
       : "ko";
 export const t = lang === "ja" ? ja : ko;

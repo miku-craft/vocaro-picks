@@ -3,6 +3,7 @@ import { repeat } from "lit-html/directives/repeat.js";
 import { lang, langParam, t } from "./i18n.ts";
 import { DEFAULT_SORT, SECTIONS, SORTS } from "./sections.ts";
 import { withPicks } from "./picks.ts";
+import { statsText } from "./format.ts";
 import { card, sectionTabs, sortOptions, detail, playlist } from "./views.ts";
 import type { EventInfo, SongData, Song } from "./types.ts";
 import songsData from "../data/songs.json";
@@ -16,12 +17,13 @@ const autoplay = $<HTMLInputElement>("#autoplay");
 
 // index.html 에 적힌 한국어 문구를 고른 언어로 바꾼다
 document.documentElement.lang = lang;
-document.title = t.siteTitle;
+document.title = t.pageTitle;
 // 제목을 누르면 섹션, 검색어, 정렬, 열린 곡을 모두 비운 첫 화면으로 (고른 언어만 유지)
 const home = $<HTMLAnchorElement>("#home");
 home.textContent = t.siteTitle;
 home.href = location.pathname + (langParam ? `?lang=${lang}` : "");
 $(".lead").textContent = t.lead;
+$("#stats").textContent = statsText(eventsData as EventInfo[]);
 q.placeholder = t.searchPlaceholder;
 q.ariaLabel = t.search;
 sort.ariaLabel = t.sort;
@@ -144,7 +146,8 @@ $("#play-all").addEventListener("click", () => {
 q.addEventListener("input", update);
 sort.addEventListener("change", update);
 
-// 빌드 때 미리 넣어 둔 목록(vite.config.ts, 검색엔진용)을 지우고 lit-html 로 다시 그린다
+// 빌드 때 미리 넣어 둔 섹션 버튼과 목록(vite.config.ts, 검색엔진용)을 지우고 lit-html 로 다시 그린다
+$("#sections").replaceChildren();
 $("#list").replaceChildren();
 update();
 openFromHash();

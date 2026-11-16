@@ -53,3 +53,15 @@ export const eventDate = (e?: EventInfo) => {
   if (!e?.from) return "";
   return e.from === e.to ? fmt(e.from) : `${fmt(e.from)}~${fmt(e.to).slice(5)}`;
 };
+
+// "행사 63곳 셋리스트 기준 (2026.11.15까지)": 가장 늦게 끝난 행사 날짜를 데이터 기준일로 쓴다
+export const statsText = (events: EventInfo[]) =>
+  t.stats(
+    events.length,
+    fmt(
+      events
+        .map((e) => e.to ?? "")
+        .sort()
+        .at(-1) || null,
+    ),
+  );

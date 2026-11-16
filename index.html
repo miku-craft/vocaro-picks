@@ -3,19 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>보카로 트렌드</title>
-    <meta
-      name="description"
-      content="한국과 일본 행사 셋리스트에 쓰인 보카로 곡. 행사에서 쓰기 좋은 곡 위주라서 유명하다고 다 있는 건 아니에요."
-    />
+    <!-- 퍼센트로 감싼 자리표시자와 비어 있는 lead, stats, sections, section-desc, list 는 vite.config.ts 가 채운다 -->
+    <title>%PAGE_TITLE%</title>
+    <meta name="description" content="%DESCRIPTION%" />
     <!-- 링크 미리보기 (og:image 는 절대 주소여야 한다) -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://vocaro.witch.work/" />
-    <meta property="og:title" content="보카로 트렌드" />
-    <meta
-      property="og:description"
-      content="한국과 일본 행사 셋리스트에 쓰인 보카로 곡. 행사에서 쓰기 좋은 곡 위주라서 유명하다고 다 있는 건 아니에요."
-    />
+    <meta property="og:title" content="%PAGE_TITLE%" />
+    <meta property="og:description" content="%DESCRIPTION%" />
     <meta property="og:image" content="https://vocaro.witch.work/og.jpg" />
     <meta property="og:image:width" content="2000" />
     <meta property="og:image:height" content="1050" />
@@ -40,21 +35,13 @@
     <header>
       <a id="lang" class="lang" href="?lang=ja">日本語</a>
       <h1><a id="home" href="./">보카로 트렌드</a></h1>
-      <p class="lead">
-        한국과 일본 행사 셋리스트에 쓰인 보카로 곡. 행사에서 쓰기 좋은 곡
-        위주라서 유명하다고 다 있는 건 아니에요.
-      </p>
+      <p class="lead"></p>
+      <p id="stats" class="desc"></p>
       <div class="controls">
-        <input
-          id="q"
-          type="search"
-          placeholder="제목, P, 보컬 검색"
-          aria-label="검색"
-        />
+        <input id="q" type="search" placeholder="제목, P, 보컬 검색" aria-label="검색" />
         <select id="sort" aria-label="정렬"></select>
         <label class="toggle"
-          ><input id="autoplay" type="checkbox" />
-          <span id="autoplay-label">자동재생</span></label
+          ><input id="autoplay" type="checkbox" /> <span id="autoplay-label">자동재생</span></label
         >
         <button id="play-all" type="button">▶ 목록 연속 재생</button>
       </div>
